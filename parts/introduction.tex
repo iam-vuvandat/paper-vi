@@ -1,5 +1,5 @@
 \section{Introduction}
-
+\cite{capponi2012recent}
 Sự phát triển mạnh mẽ của các giải pháp điện khí hóa trong lĩnh vực giao thông vận tải và năng lượng tái tạo đã đặt ra nhu cầu cấp thiết về các dòng máy điện có mật độ công suất vượt trội, trong đó động cơ nam châm vĩnh cửu hướng trục (AFPM) nổi lên như một công nghệ then chốt []. Khác với các máy điện hướng kính truyền thống, AFPM sở hữu cấu trúc hình học đặc thù với sự phân bố từ trường biến thiên phức tạp trong không gian ba chiều, khiến các mô hình 2D đơn giản hóa không còn đảm bảo độ tin cậy trong việc đánh giá chính xác các đặc tính vận hành []. Thực tế này bắt buộc các nhà thiết kế phải sử dụng phương pháp Phần tử hữu hạn 3D (3D FEM) để đảm bảo tính thực tế của mô hình []. Tuy nhiên, các công đoạn thiết kế và tối ưu hóa đa mục tiêu thường sử dụng các thuật toán tìm kiếm toàn cục, vốn đòi hỏi hàng ngàn lần đánh giá mô hình lặp lại, dẫn đến một "nút thắt cổ chai" về chi phí tài nguyên và thời gian thực thi khi sử dụng 3D FEM truyền thống [].
 
 
@@ -10,6 +10,6 @@ Nhằm khắc phục rào cản về tốc độ, các mô hình truyền thốn
 
 Xuất phát từ bối cảnh đó, bài báo này đề xuất một khung tính toán Thể tích hữu hạn bước thời gian tổng quát (A Generalized Time-Stepping Finite Volume Framework) tích hợp kỹ thuật ánh xạ trường cục bộ dựa trên từ trở (Reluctance-Based Local Field Mapping) dành cho máy điện quay. Bằng cách rời rạc hóa miền tính toán thành các thể tích kiểm soát hình thang cân trong hệ tọa độ trụ, phương pháp đề xuất không chỉ đảm bảo tính bảo toàn từ thông cục bộ và tính tổng quát tương đương FEM, mà còn tối ưu hóa tốc độ thông qua thuật toán dịch chuyển chỉ số phần tử để mô tả chuyển động quay []. Kết quả thực nghiệm trên động cơ mẫu cho thấy mô hình đạt độ khớp cao với 3D FEM nhưng giảm thiểu thời gian thực thi đáng kể (từ 10 đến 15 lần), khẳng định tính khả thi của khung tính toán FVM đề xuất trong các quy trình tối ưu hóa máy điện hiện đại [].
 
-
+ 
 
 Cấu trúc của bài báo được tổ chức như sau: Phần II trình bày cơ sở toán học của khung tính toán FVM và kỹ thuật ánh xạ trường dựa trên từ trở. Phần III mô tả quy trình rời rạc hóa lưới và thuật toán xử lý chuyển động quay. Phần IV cung cấp các kết quả thực nghiệm, so sánh đối chứng với 3D FEM và thảo luận về hiệu năng tính toán. Cuối cùng, các kết luận và định hướng nghiên cứu tiếp theo được trình bày trong Phần V.

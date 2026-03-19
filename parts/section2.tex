@@ -1,0 +1,36 @@
+\section{Numerical Implementation and Solution Strategy}
+
+
+\subsection{Phân tích Topology của mạng từ trở 3D}
+
+\begin{comment}
+Phần này phân tích số lượng nhánh, nút, và từ đó tìm ra số vòng độc lập, số nút độc lập. Giới thiệu rằng có 2 phương pháp để thiết lập phương trình: dùng biến từ thế nút và từ thông vòng, tuy nhiên với số lượng vòng độc lập và nút độc lập vừa tìm được thì việc viết phương trình dựa trên biến từ thế nút là đơn giản hơn ( dù có bất lợi về tính ổn định và tính hội tụ).
+\end{comment}
+
+Trước khi tiến hành thiết lập hệ phương trình, việc phân tích đặc điểm hình học và cấu trúc liên kết (topology) của mạng lưới đóng vai trò quyết định. Dựa trên lưới cấu trúc đã xác định ở Section 2, các thành phần cơ bản của mạng từ trở 3D bao gồm:
+
+\begin{itemize}
+    \item \textbf{Số lượng nút ($N$):} Tổng số nút mạng được xác định bởi tích số lượng điểm chia trên các trục tọa độ: $N = n_r \cdot n_\theta \cdot n_z$.
+    \item \textbf{Số lượng nhánh ($B$):} Với cấu trúc mỗi nút nội vùng kết nối với 6 nút lân cận, tổng số nhánh trong mạng lưới xấp xỉ gấp 3 lần số lượng nút ($B \approx 3N$).
+    \item \textbf{Số lượng vòng độc lập ($L$):} Theo lý thuyết đồ thị, số lượng phương trình vòng cần thiết để mô tả mạng điện/từ được tính theo công thức: $L = B - N + 1$.
+    \item \textbf{Số lượng nút độc lập:} Để giải bằng phương pháp thế, ta cần xác định $N-1$ nút độc lập (với một nút được chọn làm gốc từ thế $\phi = 0$).
+\end{itemize}
+
+
+
+Trong lý thuyết tính toán mạch từ, có hai hướng tiếp cận chính để thiết lập hệ phương trình ma trận: phương pháp từ thông vòng (biến là từ thông $\Phi$) và phương pháp từ thế nút (biến là từ thế $\phi$). 
+
+\begin{enumerate}
+    \item \textbf{Phương pháp từ thông vòng:} Đòi hỏi việc xác định $L$ vòng độc lập. Trong không gian 3D, thuật toán tìm kiếm và quản lý các vòng từ thông kín cực kỳ phức tạp, đặc biệt khi mô hình có sự thay đổi liên kết do chuyển động quay.
+    \item \textbf{Phương pháp từ thế nút:} Chỉ yêu cầu xác định các nút mạng, điều này cực kỳ đơn giản và trực quan đối với lưới cấu trúc 3D.
+\end{enumerate}
+
+Mặc dù phương pháp từ thế nút có những bất lợi nhất định về tính ổn định số học và tốc độ hội tụ trong các bài toán bão hòa mạnh so với phương pháp dòng vòng (vốn bảo toàn từ thông tốt hơn), nhưng do sự đơn giản vượt trội trong việc xác định các thực thể topo và lập trình tự động hóa, chúng tôi quyết định lựa chọn phương pháp từ thế nút làm cơ sở cốt lõi cho mô hình 3D-MBGRN này.
+
+\subsection{Global Matrix System Assembly}
+
+\subsection{Non-linear Analysis and Jacobian Matrix}
+
+\subsection{Iterative Solvers and Convergence Criteria}
+
+

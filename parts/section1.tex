@@ -1,166 +1,162 @@
+\section{Mô hình đề xuất}
 
-\section{Mô hình toán học}
+\subsection{Domain Discretization}
+Mô hình đề xuất áp dụng cho một vùng không gian khối trụ rỗng (hollow cylinder) hoặc một phân đoạn hình trụ (cylindrical sector) trong hệ tọa độ trụ $(r, \theta, z)$ nhằm khai thác tối đa đặc tính đối xứng tâm của các máy điện quay. Quá trình rời rạc hóa miền tính toán $\Omega$ được thực hiện thông qua việc thiết lập ba tập hợp điểm nút lưới (grid points) bao gồm: ma trận bán kính $R = [r_0, r_1, \dots, r_{m}]$ xác định các lớp từ trục đến vỏ máy; ma trận vị trí góc $\Theta = [\theta_0, \theta_1, \dots, \theta_{n}]$ rời rạc hóa theo phương tiếp tuyến; và ma trận trục $Z = [z_0, z_1, \dots, z_{p}]$ rời rạc không gian theo hướng trục. 
 
-\subsection{Rời rạc không gian tính toán và cấu trúc lưới}
-
-\begin{comment}
-Phần này đề cập đến việc không gian cần tính toán được phủ lên một lưới trong hệ tọa độ trụ - được cấu tạo từ 3 tập hợp điểm: tập hợp các bán kính r, tập hợp các độ cao z và tập hợp các góc theta ( lưu ý các góc theta là đều). vùng không gian được giới hạn bởi 2 bán kính liên tiếp, 2 độ cao liên tiếp và 2 góc liên tiếp được gọi là phần tử
-\end{comment}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.48\textwidth]{figure/Figure_1.png}
-    \caption{Cấu trúc lưới 3D trong hệ tọa độ trụ}
-    \label{fig:mesh_structure}
-\end{figure}
-
-
-Để xây dựng mô hình mạng từ trở, trước hết miền tính toán của máy điện được rời rạc hóa trong hệ tọa độ trụ $(r, \theta, z)$. Không gian khảo sát được bao phủ bởi một lưới cấu trúc (structured grid) được thiết lập từ ba tập hợp điểm tọa độ:
-\begin{itemize}
-    \item Tập hợp các bán kính: $\mathbf{r} = \{r_i \mid i = 1, 2, \dots, n_r\}$
-    \item Tập hợp các độ cao: $\mathbf{z} = \{z_k \mid k = 1, 2, \dots, n_z\}$
-    \item Tập hợp các góc: $\boldsymbol{\theta} = \{\theta_j \mid j = 1, 2, \dots, n_\theta\}$
-\end{itemize}
-
-Trong mô hình này, một điều kiện quan trọng là tập hợp các góc $\boldsymbol{\theta}$ phải được phân bổ đều, tức là bước góc $\Delta\theta = \theta_{j+1} - \theta_j$ là hằng số đối với mọi $j$. Đặc tính này đóng vai trò quyết định trong việc triển khai kỹ thuật dịch chuyển chỉ số (index shifting) để mô phỏng chuyển động quay mà không cần chia lại lưới.
-
-
-
-Dựa trên các tập hợp điểm này, vùng không gian được giới hạn bởi hai bán kính liên tiếp $[r_i, r_{i+1}]$, hai độ cao liên tiếp $[z_k, z_{k+1}]$ và hai góc liên tiếp $[\theta_j, \theta_{j+1}]$ được định nghĩa là một phần tử khối (volume element) cơ bản. Mỗi phần tử khối này sẽ là đơn vị tính toán để xác định các thông số vật lý như độ từ dẫn và từ trở tương ứng trong mạng lưới.
-
-\subsection{Phần tử}
-
-\begin{comment}
-Phần này tập trung vào việc mô tả mỗi phần tử là một vùng không gian được giới hạn ở section trên, do đó nó có 6 mặt, mỗi mặt lại được "lắp" vào một phần tử khác. Ở trung tâm mỗi phần tử có một nút trung tâm, kết nối với nút trung tâm này là 6 nhánh tương ứng với đường từ thông của 6 mặt, trên mỗi nhánh có 1 từ trở và 1 nguồn sức từ động
-\end{comment}
-
-Mỗi phần tử trong mô hình được định nghĩa là một vùng không gian giới hạn bởi các mặt cắt đã được thiết lập ở phần trên. Cấu trúc và đặc điểm của phần tử được mô tả chi tiết như sau:
-
-\begin{itemize}
-    \item \textbf{Cấu trúc hình học:} Mỗi phần tử là một khối lục diện có 6 mặt. Đặc điểm quan trọng là mỗi mặt của phần tử này sẽ được "lắp" khít với một mặt tương ứng của phần tử lân cận, tạo nên một mạng lưới không gian liên tục và khép kín.
-    \item \textbf{Nút trung tâm:} Tại trung tâm hình học của mỗi phần tử, một nút mạng được thiết lập (nút trung tâm). Đây là điểm nút chính dùng để xác định giá trị từ thế nút $\phi$ cho toàn bộ vùng không gian mà phần tử đó bao phủ.
-    \item \textbf{Hệ thống nhánh từ thông:} Kết nối với nút trung tâm này là 6 nhánh, tương ứng với 6 đường dẫn từ thông đi qua tâm của 6 mặt phần tử. Cấu trúc này mô phỏng sự luân chuyển của từ thông giữa phần tử đang xét và 6 phần tử lân cận theo các phương trong không gian.
-    \item \textbf{Thành phần trên nhánh:} Trên mỗi nhánh từ thông, mô hình tích hợp hai thành phần vật lý cơ bản:
-    \begin{itemize}
-        \item Một từ trở ($\mathcal{R}$): đại diện cho đặc tính từ dẫn của vật liệu trong phần tử.
-        \item Một nguồn sức từ động ($\mathcal{F}$): đại diện cho tác động kích từ (cuộn dây hoặc nam châm vĩnh cửu) trong vùng không gian đó.
-    \end{itemize}
-\end{itemize}
-
-\subsubsection{Vật liệu}
-
-\begin{comment}
-    Subsection này đề cập đến việc mỗi phần tử trong mô hình này chỉ được gắn với 1 loại vật liệu duy nhất. đó chính là loại vật liệu của động cơ ( geometry thật) xuất hiện với thể tích lớn nhất tại phần tử đó. 
-\end{comment}
-
-Trong mô hình mạng từ trở dựa trên lưới 3D đề xuất, mỗi phần tử khối được gán một loại vật liệu duy nhất để đơn giản hóa quá trình tính toán đặc tính từ dẫn. Việc xác định loại vật liệu cho từng phần tử được thực hiện dựa trên quy luật chiếm ưu thế về không gian:
-
-\begin{itemize}
-    \item \textbf{Nguyên tắc gán vật liệu:} Một phần tử sẽ được gán thuộc tính của loại vật liệu có thể tích chiếm chỗ lớn nhất bên trong ranh giới của chính phần tử đó. Ví dụ, nếu một phần tử nằm ở biên giữa lõi sắt và không khí, nhưng phần lõi sắt chiếm tỷ lệ thể tích lớn nhất trong khối, toàn bộ phần tử đó sẽ được coi là lõi sắt.
-    \item \textbf{Sự tương ứng với hình học thực tế:} Quy trình này cho phép ánh xạ cấu trúc hình học thực (geometry) của động cơ lên lưới tính toán một cách tự động. Độ chính xác của việc mô phỏng hình dạng thực tế phụ thuộc trực tiếp vào mật độ chia lưới; lưới càng dày thì việc gán vật liệu tại các vùng biên giữa các thành phần càng trở nên chính xác.
-    \item \textbf{Tính đồng nhất trong phần tử:} Sau khi loại vật liệu đã được xác định, các thông số vật lý tương ứng như độ từ dẫn $\mu$ sẽ được áp dụng đồng nhất cho toàn bộ vùng không gian của phần tử đó. Điều này giúp ổn định quá trình thiết lập ma trận hệ thống và tính toán các từ trở trên 6 nhánh của phần tử.
-\end{itemize}
-
-\subsubsection{Từ trở}
-\begin{comment}
-Phần này đề cập đến việc từ trở của mỗi nhánh được xác định từ công thức kinh điển: R = l/mu0 mur A, chi tiết hơn: từ trở mỗi nhánh được xác định từ công thức sau:
-\end{comment}
-
-Từ trở của mỗi nhánh trong phần tử được xác định dựa trên công thức kinh điển trong từ học. Giá trị này phụ thuộc vào chiều dài đường đi của từ thông, diện tích mặt cắt ngang mà từ thông xuyên qua và độ từ dẫn của vật liệu tại phần tử đó:
+Dựa trên cấu trúc lưới này, toàn bộ miền tính toán được chia thành một tập hợp hữu hạn các phần tử hình học với tổng số lượng $q_{E}$ được xác định bởi:
 \begin{equation}
-    \mathcal{R} = \frac{l}{\mu_0 \mu_r A}
-\end{equation}
-Trong đó $l$ là chiều dài nhánh, $A$ là diện tích mặt cắt ngang, $\mu_0$ là độ từ dẫn của chân không và $\mu_r$ là độ từ dẫn tương đối của vật liệu phần tử.
-
-
-
-Cụ thể, đối với một phần tử trong hệ tọa độ trụ với các kích thước bước lưới $\Delta r, \Delta \theta, \Delta z$, từ trở của 6 nhánh nối từ nút trung tâm đến tâm của 6 mặt được tính toán như sau:
-
-\begin{itemize}
-    \item \textbf{Theo phương bán kính ($r$):} Chiều dài nhánh bằng một nửa bước lưới $\Delta r / 2$. Diện tích mặt cắt ngang là diện tích mặt bao của hình trụ tại bán kính trung bình $r_{avg}$.
-    \begin{equation}
-        R_{r, \text{nhánh}} = \frac{\Delta r / 2}{\mu \cdot (r_{avg} \Delta \theta \Delta z)}
-    \end{equation}
-    \item \textbf{Theo phương góc ($\theta$):} Chiều dài nhánh là độ dài cung tròn ứng với một nửa bước góc $\Delta \theta / 2$. Diện tích mặt cắt ngang được giới hạn bởi bước bán kính và bước trục.
-    \begin{equation}
-        R_{\theta, \text{nhánh}} = \frac{(r_{avg} \Delta \theta) / 2}{\mu \cdot (\Delta r \Delta z)}
-    \end{equation}
-    \item \textbf{Theo phương trục ($z$):} Chiều dài nhánh bằng một nửa bước trục $\Delta z / 2$. Diện tích mặt cắt ngang là diện tích hình quạt trên mặt phẳng $r-\theta$.
-    \begin{equation}
-        R_{z, \text{nhánh}} = \frac{\Delta z / 2}{\mu \cdot (r_{avg} \Delta \theta \Delta r)}
-    \end{equation}
-\end{itemize}
-
-Việc chia nhỏ từ trở thành các nhánh từ trung tâm đến mặt giúp phản ánh chính xác sự thay đổi về hình học và vật liệu tại ranh giới giữa các phần tử, đảm bảo tính liên tục của mạch từ trong không gian 3D.
-
-\subsubsection{Nguồn sức từ động}
-
-\begin{comment}
-Đề cập đến việc có 2 loại nguồn kích thích đó là nam châm vĩnh cửu và dây quấn, đều được mô hình hóa thành dạng nguồn sức từ động ở trong Element, nhằm tổng quát hóa: mỗi phần tử được coi như xuất hiện đồng thời cả nguồn nam châm và dây quấn, sức từ động tổng của mỗi nhánh được xác định bằng tổng của 2 thành phần này ( nam châm và dây quấn), được xác định bằng:
-
-\end{comment}
-
-
-
-Trong mô hình đề xuất, các nguồn kích thích chính của động cơ bao gồm nam châm vĩnh cửu và các cuộn dây quấn đều được quy đổi về dạng nguồn sức từ động (Magnetomotive Force - MMF) nằm trên các nhánh của phần tử. Để đạt được tính tổng quát cao nhất trong quá trình lập trình và thiết lập ma trận, mỗi phần tử được xem xét như thể có sự xuất hiện đồng thời của cả hai loại nguồn này. 
-
-Sức từ động tổng cộng của mỗi nhánh trong phần tử được xác định bằng tổng đại số của hai thành phần: thành phần do nam châm vĩnh cửu và thành phần do dòng điện trong cuộn dây:
-
-\begin{equation}
-    F_{nhánh} = F_{pm} + F_{coil}
+    q_{E} = m \times n \times p
 \end{equation}
 
-Trong đó:
-\begin{itemize}
-    \item \textbf{Nguồn sức từ động từ nam châm vĩnh cửu ($F_{pm}$):} Được xác định dựa trên lực kháng từ $H_c$ của vật liệu và chiều dài của nhánh tương ứng. Nếu phần tử được gán vật liệu không phải là nam châm, giá trị này sẽ bằng 0.
-    \begin{equation}
-        F_{pm} = H_c \cdot l_{nhánh}
-    \end{equation}
-    
-    \item \textbf{Nguồn sức từ động từ cuộn dây ($F_{coil}$):} Được xác định dựa trên cường độ dòng điện $I$ và số vòng dây $N$ đi qua diện tích mặt cắt tương ứng của phần tử theo định luật Ampere. Đối với các vùng không chứa cuộn dây (như khe hở không khí hoặc lõi sắt), thành phần này được mặc định bằng 0.
-\end{itemize}
+Toàn bộ miền tính toán được chia thành tổng số phần tử $q_E = m \times n \times p$. Trong đó, mỗi phần tử đơn lẻ $E_{i,j,k}$, còn được gọi là $E_f$, được định danh duy nhất thông qua bộ chỉ số không gian $(i, j, k)$ với $0 \le i < m$, $0 \le j < n$ và $0 \le k < p$. Để thuận tiện cho việc ánh xạ dữ liệu vào hệ phương trình ma trận và tối ưu hóa tốc độ xử lý trong mã nguồn, mỗi phần tử còn được gán một chỉ số phẳng (flat index) $f$ duy nhất trong phạm vi $[0, q_E - 1]$. Với quy luật chỉ số $i$ tăng nhanh nhất, kế đến là $j$ và cuối cùng là $k$, chỉ số $f$ được xác định cụ thể theo quy tắc:
+\begin{equation}
+    f = k \cdot (n \cdot m) + j \cdot m + i
+\end{equation}
+
+Việc thiết lập mối quan hệ này giúp bộ giải 3D MRN có thể chuyển đổi linh hoạt giữa cấu trúc hình học vật lý và các vector đại số trong quá trình tính toán.
+
+Trong mô hình đề xuất này, ma trận vị trí góc $\Theta$ được thiết lập với bước góc đồng nhất $\Delta\theta = \text{const}$, tạo tiền đề toán học cho kỹ thuật dịch chỉ số (index shifting) để mô tả chuyển động quay mà không cần tái tạo lưới. 
+
+\subsection{Phần tử (Element)}
+\subsubsection{Định nghĩa phần tử và cấu tạo mạng từ trở nội tại}
+
+Trong mô hình 3D-MRN đề xuất, mỗi phần tử $E_{i,j,k}$ được định nghĩa là một phần tử lục diện 3D đặc thù, được hình thành từ sự giao cắt của sáu mặt đẳng tọa độ liên tiếp trong không gian hệ tọa độ trụ $(r, \theta, z)$. Thực thể này được giới hạn một cách chính xác bởi hai mặt trụ tại bán kính $r_i$ và $r_{i+1}$, hai mặt phẳng kinh tuyến tại các vị trí góc $\theta_j$ và $\theta_{j+1}$, cùng hai mặt phẳng ngang tại cao độ $z_k$ và $z_{k+1}$ theo phương dọc trục. Việc thiết lập ranh giới phần tử dựa trên các mặt cắt tọa độ giao thoa tạo nên một thực thể tính toán khép kín và duy nhất, cho phép gán các thuộc tính vật liệu phi tuyến đồng nhất cũng như đặt nút thế trung tâm $P_{i,j,k}$ nhằm phục vụ quá trình xây dựng hệ phương trình đại số toàn cục.
+
+Dựa trên các ranh giới tọa độ đã thiết lập, các kích thước hình học đặc trưng của phần tử $E_{i,j,k}$ phục vụ cho việc tính toán mạch từ được xác định thông qua các độ dài đặc trưng và diện tích mặt cắt tương ứng. Các chiều dài đặc trưng theo phương hướng tâm ($l_r$), tiếp tuyến ($l_\theta$) và dọc trục ($l_z$) được xác định chính xác theo các công thức sau:
+\begin{equation}
+    l_r = (r_{i+1} - r_i) \cos\left( \frac{|\theta_{j+1} - \theta_j|}{2} \right)
+\end{equation}
+\begin{equation}
+    l_\theta = (r_{i+1} + r_i) \sin\left( \frac{|\theta_{j+1} - \theta_j|}{2} \right)
+\end{equation}
+\begin{equation}
+    l_z = z_{k+1} - z_k
+\end{equation}
+
+Tương ứng với các độ dài vừa thiết lập, diện tích các mặt cắt trung bình phục vụ cho quá trình bảo toàn thông lượng và tính toán khả năng dẫn từ của phần tử được xác định bởi:
+\begin{equation}
+    A_r = l_\theta \cdot l_z, \quad A_\theta = l_r \cdot l_z, \quad A_z = l_r \cdot l_\theta
+\end{equation}
+
+\subsubsection{Cấu tạo nội tại phần tử}
+
+Mỗi phần tử $E_{i,j,k}$ được đặc trưng bởi một nút thế trung tâm $P_{i,j,k}$ đặt tại tâm hình học của khối lục diện và hệ thống sáu nhánh tỏa ra theo các trục tọa độ $s \in \{r, \theta, z\}$. Để quản lý dữ liệu mạng lưới, một quy ước chỉ số hướng $d \in \{0, 1\}$ được thiết lập đồng nhất cho từ trở ($R$), thông lượng từ ($\phi$) và nguồn sức từ động ($F$). Cụ thể, chỉ số $d=0$ đại diện cho các thông số trên nhánh đi vào nút thế trung tâm, trong khi $d=1$ đại diện cho các nhánh đi ra khỏi nút thế. Theo đó, các đại lượng nội tại trên mỗi nhánh được ký hiệu là $R_{s,d,i,j,k}$, $\phi_{s,d,i,j,k}$ và $F_{s,d,i,j,k}$.
+
+Về mặt vật lý, mỗi nhánh được mô hình hóa bằng một mạch từ tương đương gồm $R$ nối tiếp với $F$. Nhằm chuẩn hóa hệ phương trình đại số, chiều dương của thông lượng và nguồn MMF được quy ước trùng với chiều tăng của các chỉ số lưới $i, j, k$. Như vậy, các nhánh mang chỉ số hướng $d=1$ luôn hướng về phía dương của trục tọa độ, còn các nhánh $d=0$ hướng về phía ngược lại. Quy ước này biến các mặt ranh giới thành điểm giao thoa logic, cho phép từ thông luân chuyển liên tục xuyên suốt không gian máy điện theo cả ba phương $s$.
+
+Việc tích hợp đầy đủ các thông số $\{R, \phi, F\}_{s,d}$ trên sáu nhánh nội tại cho phép mỗi phần tử phản ánh chính xác đặc tính vật liệu phi tuyến và các nguồn kích thích tại vị trí cục bộ. Đây là nền tảng trực tiếp để thiết lập phương trình cân bằng thông lượng tại từng nút $P_{i,j,k}$, phục vụ quá trình lắp ghép ma trận hệ thống toàn cục trong không gian 3D-MRN.
+
+\subsubsection{Xác định vật liệu và thuật toán gán tự động}
+
+Trong mô hình 3D-MRN, mỗi phần tử $E_{i,j,k}$ được quy ước là một thực thể đồng nhất và chỉ xác định duy nhất một loại vật liệu trong suốt miền không gian của nó. Việc định danh vật liệu cho phần tử được thực hiện thông qua vị trí tâm hình học, tương ứng với tọa độ của nút thế trung tâm $P_{i,j,k}$. Tọa độ tâm hình học $(r_c, \theta_c, z_c)$ của phần tử được xác định chính xác từ các giới hạn lưới như sau:
+\begin{equation}
+    r_c = \frac{r_i + r_{i+1}}{2}, \quad \theta_c = \frac{\theta_j + \theta_{j+1}}{2}, \quad z_c = \frac{z_k + z_{k+1}}{2}
+\end{equation}
+
+Thuật toán gán vật liệu tự động vận hành dựa trên quy trình kiểm tra vị trí điểm (point-in-region) đối với mô hình hình học gốc của máy điện. Nếu tọa độ tâm $(r_c, \theta_c, z_c)$ nằm trong một vùng không gian của một loại vật liệu thực (như lõi sắt, nam châm, dây quấn, hoặc khe hở không khí), thì toàn bộ phần tử $E_{i,j,k}$ đó sẽ được gán định danh (Material ID) tương ứng. Việc định danh này là cơ sở để bộ giải truy xuất các đặc tính lý hóa (như đường cong từ hóa $B-H$ hay độ dẫn điện) phục vụ cho các bước tính toán thông số mạch từ sau đó.
 
 
 
-Cách tiếp cận này cho phép đồng nhất hóa cấu trúc dữ liệu của mọi phần tử trong mạng lưới. Đặc thù vật lý của từng vùng không gian (Stator, Rotor, hay khe hở không khí) sẽ được quyết định một cách tự động thông qua việc gán giá trị tham số $H_c$ và $N \cdot I$ tương ứng, giúp đơn giản hóa đáng kể thuật toán thiết lập vectơ nguồn toàn cục trong không gian 3D.
+Cần lưu ý rằng việc quy ước mỗi phần tử chỉ mang một loại vật liệu duy nhất dựa trên điểm tâm sẽ dẫn đến sự rời rạc hóa bề mặt vật liệu gốc. Tại các biên tiếp giáp có hình dạng cong hoặc phức tạp, quy trình này gây ra sai số hình học dưới dạng các "bậc thang" (staircase effect). Tuy nhiên, hiện tượng này có thể được cải thiện đáng kể và tiệm cận với biên vật liệu thực tế bằng cách tăng mật độ lưới ($m, n, p$). Việc làm mịn lưới tại các vùng biên không chỉ giảm thiểu sai số hình học mà còn giúp mô hình 3D-MRN phản ánh chính xác hơn sự biến thiên của từ trường tại các vùng chuyển tiếp vật liệu trong không gian ba chiều.
 
-\subsection{Điều kiện biên (Boundary Conditions)}
+\subsubsection{Xác định thông số từ trở cho các nhánh nội tại}
 
-\begin{comment}
-Đề cập đến việc cài đặt điều kiện biên là rất quan trọng. Trong bài báo này, chúng tôi sử dụng điều kiện biên song song cho giới hạn bán kính ngoài và giới hạn bán kính trong của lưới (bằng cách vô hiệu hóa đường từ thông chảy ra ngoài). Và quan trọng nhất là điều kiện biên chu kì ( cho phép nối theta đầu và theta cuối lại với nhau thành một miền tuần hoàn theo phương theta, rất quan trọng nếu đã xác định miền tính toán của chúng ta là tuần hoàn và chỉ cần tính toán một phần và nội suy ra toàn bộ )
-\end{comment}
+Dựa trên các kích thước hình học đặc trưng và định danh vật liệu đã được gán, các thông số từ trở của sáu nhánh nội tại bên trong phần tử $E_{i,j,k}$ được xác định cụ thể. Trong mô hình 3D-MRN, mỗi nhánh đại diện cho sự cản trở từ thông khi di chuyển từ nút thế trung tâm $P_{i,j,k}$ ra đến tâm của sáu mặt ranh giới lục diện. Vì nút thế nằm tại tâm hình học, chiều dài từ dẫn thực tế của mỗi nhánh nội tại chỉ chiếm một nửa tổng chiều dài đặc trưng $l_d$ ($d \in \{r, \theta, z\}$) của phần tử theo phương tương ứng. Quy ước chia đôi chiều dài này đảm bảo rằng khi hai phần tử lân cận được ghép nối tại mặt ranh giới chung, tổng từ trở giữa hai nút thế kế tiếp sẽ là sự kết hợp nối tiếp của hai "nửa từ trở" từ hai phần tử đó, tạo nên tính liên tục và chính xác cho mạng điện từ 3D.
+
+Giá trị từ trở nội tại của sáu nhánh bên trong phần tử $E_{i,j,k}$ theo các phương tương ứng $d \in \{r, \theta, z\}$ được xác định thông qua một biểu thức tổng quát dựa trên kích thước hình học và đặc tính vật liệu:
+\begin{equation}
+    R_{d,i,j,k} = \frac{l_d}{2 \mu_0 \mu_{r,i,j,k} A_d}, \quad d \in \{r, \theta, z\}
+\end{equation}
+Trong đó, việc chia đôi chiều dài đặc trưng $l_d$ phản ánh chính xác quãng đường từ thông di chuyển từ nút thế trung tâm $P_{i,j,k}$ đến các mặt ranh giới của khối lục diện. Quy ước này không chỉ đảm bảo tính đối xứng của mạng lưới mà còn tạo điều kiện thuận lợi cho việc thiết lập độ dẫn từ tương đương giữa các phần tử lân cận trong không gian 3D-MRN.
+
+Trong các công thức trên, $\mu_0$ là độ từ thẩm của chân không và $\mu_{r,i,j,k}$ là độ từ thẩm tỷ đối được tra cứu từ Material ID. Đối với các vùng vật liệu sắt từ, giá trị $\mu_{r,i,j,k}$ mang tính phi tuyến và sẽ được cập nhật liên tục dựa trên mật độ từ thông $B_{i,j,k}$ tại tâm phần tử thông qua các bước lặp của bộ giải. Việc thiết lập sáu giá trị từ trở nội tại này là tiền đề bắt buộc để xây dựng ma trận độ dẫn từ toàn cục, cho phép mô hình hóa sự phân bố trường trong toàn bộ miền tính toán của máy điện.
+
+\subsubsection{Magnetic Source}
+
+Tại mỗi phần tử $E_{i,j,k}$, vector nguồn sức từ động (MMF) tổng hợp $\vec{F}_{i,j,k}$ được xác định bởi sự đóng góp từ thành phần nam châm vĩnh cửu ($\vec{F}_{m,i,j,k}$) và nguồn kích thích từ hệ thống dây quấn ($\vec{F}_{w,i,j,k}$):
+\begin{equation}
+    \vec{F}_{i,j,k} = \vec{F}_{m,i,j,k} + \vec{F}_{w,i,j,k}
+\end{equation}
+Trong đó, $\vec{F}_{i,j,k}$ đại diện cho tổng tác động kích từ cục bộ tại vị trí phần tử, đóng vai trò là nguồn sơ cấp gây ra sự chênh lệch thế từ nút trong mạng lưới.
+
+Nguồn sức từ động do nam châm vĩnh cửu gây ra phụ thuộc vào cường độ lực kháng từ $H_{c,i,j,k}$, chiều dài phần tử dọc theo hướng từ hóa $l_{m,i,j,k}$ và vector đơn vị chỉ phương $\vec{u}_{m,i,j,k}$:
+\begin{equation}
+    \vec{F}_{m,i,j,k} = (H_{c,i,j,k} \cdot l_{m,i,j,k}) \cdot \vec{u}_{m,i,j,k}
+\end{equation}
+Ở đây, $H_{c,i,j,k}$ là cường độ lực kháng từ của vật liệu nam châm; $l_{m,i,j,k}$ là kích thước hình học của phần tử dọc theo trục từ hóa; và $\vec{u}_{m,i,j,k}$ là vector đơn vị xác định hướng từ hóa (như hướng tâm hoặc hướng trục).
+
+Đối với nguồn kích thích từ dây quấn, giá trị sức từ động cục bộ được tính toán dựa trên sự tương tác giữa phân bổ dây quấn và dòng điện pha thông qua biểu thức:
+\begin{equation}
+    \vec{F}_{w,i,j,k} = (\vec{N}_{w,i,j,k} \cdot \vec{I}_{i,j,k}) \cdot \vec{n}_w
+\end{equation}
+Trong đó, $\vec{N}_{w,i,j,k}$ là vector hàng chứa số vòng dây hiệu dụng quy đổi cho phần tử $E_{i,j,k}$ tương ứng với $m$ pha của máy điện:
+\begin{equation}
+    \vec{N}_{w,i,j,k} = [n_a, n_b, \dots, n_m]
+\end{equation}
+Vector $\vec{I}_{i,j,k}$ là vector cột chứa giá trị dòng điện tức thời của các pha tại thời điểm tính toán:
+\begin{equation}
+    \vec{I}_{i,j,k} = [i_a, i_b, \dots, i_m]^T
+\end{equation}
+Phép nhân vô hướng $\vec{N}_{w,i,j,k} \cdot \vec{I}_{i,j,k}$ tạo ra tổng ampe-vòng kích thích cục bộ, sau đó được định hướng không gian bởi vector pháp tuyến bối dây $\vec{n}_w$ (vuông góc với hướng dòng điện).
+
+[Image of MMF calculation in electrical machines]
+
+Để tích hợp vào mạng lưới 3D-MRN, vector sức từ động tổng hợp được chiếu lên các trục tọa độ $s \in \{r, \theta, z\}$ và phân bổ đều cho hai hướng $d \in \{0, 1\}$ trên mỗi phương tương ứng:
+\begin{equation}
+    F_{s,d,i,j,k} = \frac{1}{2} (\vec{F}_{i,j,k} \cdot \vec{u}_s), \quad s \in \{r, \theta, z\}, \quad d \in \{0, 1\}
+\end{equation}
+Trong đó, $F_{s,d,i,j,k}$ là nguồn MMF được gán trực tiếp cho từng nhánh nội tại; $\vec{u}_s$ là các vector đơn vị tương ứng với các trục $r, \theta$ và $z$. Việc chia đôi giá trị chiếu đảm bảo tính đối xứng đại số và là cơ sở để thiết lập phương trình cân bằng thông lượng tại nút thế trung tâm $P_{i,j,k}$ trong không gian ba chiều.
+
+
+\subsection{Boundary}
+
+Để đóng kín hệ phương trình đại số và đảm bảo tính duy nhất của nghiệm cho mô hình 3D-MRN, các điều kiện biên phải được thiết lập dựa trên đặc tính vật lý và tính đối xứng hình học của máy điện. Việc áp dụng các điều kiện biên phù hợp không chỉ giúp phản ánh chính xác trường điện từ mà còn cho phép giảm đáng kể kích thước ma trận hệ thống, từ đó cải thiện tốc độ tính toán.
+
+Điều kiện biên song song (parallel boundary condition) được áp dụng tại các mặt giới hạn theo phương hướng tâm ($r$) và phương dọc trục ($z$). Cụ thể, đối với các phần tử nằm tại ranh giới trong ($i=0$), ranh giới ngoài ($i=m$), hoặc các mặt cắt dọc trục ($k=0$ và $k=p$), thông lượng từ $\phi_{s,d}$ xuyên qua các mặt ranh giới này được cưỡng bức bằng không:
+\begin{equation}
+    \phi_{r,0,0,j,k} = 0
+\end{equation}
+\begin{equation}
+    \phi_{r,1,m,j,k} = 0
+\end{equation}
+\begin{equation}
+    \phi_{z,0,i,j,0} = 0
+\end{equation}
+\begin{equation}
+    \phi_{z,1,i,j,p} = 0
+\end{equation}
+
+Theo phương tiếp tuyến ($\theta$), các điều kiện biên chu kỳ (periodic) và phản chu kỳ (anti-periodic) được sử dụng để tận dụng tính đối xứng lặp lại của cấu trúc máy điện. Để tối ưu hóa tài nguyên tính toán, đơn vị tối thiểu cần được mô hình hóa trong không gian 3D-MRN được xác định dựa trên mối quan hệ giữa số rãnh stator ($Q_s$) và số cặp cực ($p$):
+\begin{equation}
+    \text{Minimum Unit} = \frac{GCD(Q_s, p)}{2}
+\end{equation}
+Trong đó, $GCD$ là ước chung lớn nhất của các thông số thiết kế. Việc giới hạn miền khảo sát trong đơn vị tối thiểu này giúp giảm số lượng biến thế nút cần giải mà vẫn bảo toàn đầy đủ thông tin về đặc tính từ trường.
+
+Tùy thuộc vào đặc điểm đối xứng, kết nối tại biên đầu ($j=0$) và biên cuối ($j=n$) theo phương $\theta$ được thiết lập. Với điều kiện biên chu kỳ, thông lượng được bảo toàn hoàn toàn về độ lớn và chiều:
+\begin{equation}
+    \phi_{\theta,0,i,0,k} = \phi_{\theta,1,i,n,k}
+\end{equation}
+Ngược lại, điều kiện biên phản chu kỳ được áp dụng khi từ trường có tính chất đảo cực tại biên đối xứng, dẫn đến sự đảo dấu của thông lượng:
+\begin{equation}
+    \phi_{\theta,0,i,0,k} = -\phi_{\theta,1,i,n,k}
+\end{equation}
+
+Sự kết hợp giữa các điều kiện biên này tạo nên một hệ thống mạng từ trở khép kín và tối ưu. Cách tiếp cận này tạo điều kiện thuận lợi cho kỹ thuật dịch chỉ số lưới (index shifting) để mô tả trạng thái quay của động cơ mà không cần tái cấu trúc ma trận, đảm bảo tính linh hoạt và tốc độ thực thi cao cho bộ giải 3D-MRN.
+
+\subsection{Rotational Motion Simulation}
+
+Trong mô hình 3D-MRN xây dựng trên hệ tọa độ trụ, tập hợp rời rạc không gian theo phương góc $\Theta = [\theta_0, \theta_1, \dots, \theta_{n-1}]$ được thiết lập với bước góc đồng nhất $\Delta\theta$ được xác định bởi:
+\begin{equation}
+    \Delta\theta = \theta_{j+1} - \theta_j
+\end{equation}
+Đặc điểm này dẫn đến một hệ quả quan trọng về mặt cấu trúc: kích thước hình học của toàn bộ các phần tử $E_{i,j,k}$ nằm trên cùng một lớp bán kính $i$ và cao độ $z_k$ là hoàn toàn giống hệt nhau. Sự đồng nhất về hình học theo phương tiếp tuyến trong không gian 3D-MRN cho phép thực hiện mô phỏng chuyển động quay của rotor một cách hiệu quả thông qua việc thay đổi các thuộc tính vật lý mà không cần can thiệp vào cấu trúc lưới cơ sở.
+
+Cụ thể, chuyển động quay với một góc rời rạc $s \cdot \Delta\theta$ được hiện thực hóa bằng cách tịnh tiến đồng thời các thực thể mô tả bộ phận quay theo hướng chuyển động. Quá trình này được thực hiện thông qua một phép dịch chỉ số đối với các thuộc tính vật lý (như Material ID) của các phần tử thuộc phần rotor:
+\begin{equation}
+    E_{i,j,k} \leftarrow E_{i,(j+s) \pmod n, k}
+\end{equation}
+Trong đó, $E_{i,j,k}$ đại diện cho trạng thái vật lý của phần tử tại vị trí lưới tương ứng, $s$ là số bước góc quay, và $n$ là tổng số phần tử theo phương góc $\theta$. Phép chia lấy phần dư $(j + s) \pmod n$ đảm bảo tính tuần hoàn của dữ liệu và duy trì sự kết nối liên tục tại các biên chu kỳ đã thiết lập.
 
 
 
-Việc thiết lập các điều kiện biên là bước bắt buộc để đảm bảo hệ phương trình ma trận có nghiệm duy nhất và phản ánh chính xác các hiện tượng vật lý trong máy điện. Trong mô hình MBGRN 3D đề xuất, hai loại điều kiện biên chính được áp dụng để giới hạn miền tính toán:
-
-\begin{itemize}
-    \item \textbf{Điều kiện biên tại giới hạn bán kính:} Đối với các bề mặt giới hạn bán kính trong ($r_{min}$) và bán kính ngoài ($r_{max}$) của lưới, chúng tôi sử dụng điều kiện biên song song (tương đương với cách ly từ tính). Điều này được thực hiện bằng cách vô hiệu hóa hoàn toàn các nhánh từ thông chảy ra ngoài ranh giới của lưới. Về mặt toán học, các thành phần từ dẫn trên các nhánh này được gán bằng không, buộc từ thông phải chạy song song với bề mặt biên và không có sự rò rỉ từ thông ra môi trường ngoài vùng khảo sát.
-    
-    \item \textbf{Điều kiện biên chu kỳ (Periodic Boundary Condition):} Đây là điều kiện biên quan trọng nhất giúp tối ưu hóa tài nguyên tính toán. Điều kiện này cho phép nối tập hợp các nút tại vị trí góc $\theta$ đầu tiên với các nút tại góc $\theta$ cuối cùng để tạo thành một miền tuần hoàn khép kín. 
-    
-    
-    
-    Việc áp dụng biên chu kỳ cho phép chúng ta chỉ cần xác định miền tính toán cho một phần nhỏ của động cơ (ví dụ: một bước cực hoặc một phân đoạn đối xứng) thay vì toàn bộ mô hình 360 độ. Các giá trị từ thế tại biên kết thúc sẽ được ràng buộc trực tiếp với các giá trị tại biên bắt đầu, từ đó giảm đáng kể kích thước ma trận hệ thống và thời gian giải mà vẫn đảm bảo tính tổng quát cho toàn bộ máy điện.
-\end{itemize}
-
-Sự kết hợp giữa việc cô lập từ thông theo phương bán kính và liên kết tuần hoàn theo phương góc giúp mô hình MBGRN 3D mô tả chính xác quy luật phân bố từ trường trong không gian của động cơ từ thông dọc trục, vốn có tính đối xứng lặp lại cao.
-
-\subsection{Mô hình hóa chuyển động và Kỹ thuật dịch chỉ số}
-\begin{comment}
-Đề cập đến việc mô phỏng chuyển động quay là cực kì quan trọng, nhất là khi tính toán mô phỏng máy điện quay. Với cấu trúc lưới đã được giới thiệu ở phần trên, ta có thể mô phỏng chuyển động quay bằng một phép dịch chỉ số: tịnh tiến đồng thời các phần tử ở miền quay một hoặc nhiều bước phần tử, tương ứng với phép quay một số góc theta cố định. với cách tiếp cận này, chúng ta đã loại bỏ nhu cầu tái tạo lại lưới.
-\end{comment}
-
-Trong mô phỏng các dòng máy điện quay, việc mô tả chính xác sự thay đổi vị trí tương đối giữa Rotor và Stator theo thời gian là một yêu cầu bắt buộc. Dựa trên cấu trúc lưới có bước góc $\Delta\theta$ đồng nhất đã được thiết lập, nghiên cứu này đề xuất sử dụng kỹ thuật dịch chỉ số (index shifting) để mô hình hóa chuyển động quay một cách hiệu quả.
-
-
-
-Nguyên lý cốt lõi của phương pháp này dựa trên việc tịnh tiến các thành phần trong mạng lưới tại miền quay:
-\begin{itemize}
-    \item \textbf{Cơ chế dịch chuyển:} Khi Rotor quay một góc $\alpha = m \cdot \Delta\theta$ (với $m$ là số nguyên bước lưới), vị trí của toàn bộ các phần tử và nút mạng thuộc miền quay sẽ được tịnh tiến đồng thời $m$ vị trí theo phương $\theta$. 
-    \item \textbf{Cập nhật liên kết khe hở không khí:} Do lưới được chia đều, sự tương tác từ thông tại khe hở không khí giữa Stator và Rotor tại bước thời gian mới có thể được xác định đơn giản bằng cách thay đổi chỉ số kết nối của các phần tử tại mặt phân cách.
-    \item \textbf{Loại bỏ việc tái cấu trúc lưới (Re-meshing):} Khác với phương pháp phần tử hữu hạn (FEM) thường yêu cầu chia lại lưới tại miền chuyển động hoặc sử dụng các kỹ thuật phức tạp như "moving band", kỹ thuật dịch chỉ số giữ nguyên cấu trúc hình học của lưới. Điều này giúp bảo toàn cấu trúc ma trận hệ thống, giảm thiểu tối đa chi phí tính toán và tránh được các sai số phát sinh do quá trình nội suy lưới.
-\end{itemize}
-
-Việc áp dụng phép tịnh tiến chỉ số không chỉ giúp tăng tốc độ mô phỏng mà còn cho phép dễ dàng phân tích các đặc tính quá độ của động cơ từ thông dọc trục trong không gian 3D với độ ổn định số học cao.
-
+Cách tiếp cận này cho phép mô tả chuyển động quay một cách tự nhiên bằng cách cập nhật các giá trị bên trong ma trận hệ thống mà không làm thay đổi cấu trúc liên kết tĩnh của mạng lưới 3D-MRN. Kỹ thuật này loại bỏ hoàn toàn nhu cầu tái tạo lưới (re-meshing) hoặc sử dụng các phép nội suy phức tạp tại mặt trượt (sliding surface), vốn là những tác vụ tiêu tốn nhiều tài nguyên tính toán và dễ gây sai số. Hơn nữa, việc duy trì cấu trúc lưới cố định và chỉ dịch chuyển thuộc tính của $E_{i,j,k}$ giúp triệt tiêu các sai số dao động số học (numerical ripples), đảm bảo tính ổn định và độ chính xác cao cho kết quả mô phỏng đặc tính động học của máy điện trong suốt quá trình vận hành.

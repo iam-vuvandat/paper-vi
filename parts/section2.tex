@@ -1,36 +1,53 @@
-\section{Numerical Implementation and Solution Strategy}
+\section{Numerical Implement}
+\subsection{Các phương trình bảo toàn cục bộ }
+\subsubsection{Phương trình bảo toàn thông lượng tại nút}
+Nguyên lý cốt lõi để giải quyết bài toán phân bố trường trong mạng 3D-MRN là việc áp dụng định luật bảo toàn thông lượng từ tại từng nút thế trung tâm $P_{i,j,k}$. Theo bản chất không nguồn của từ trường, tổng đại số của tất cả các dòng thông lượng từ $\phi_{s,d,i,j,k}$ đi qua sáu nhánh nội tại kết nối với nút thế phải triệt tiêu hoàn toàn nhằm đảm bảo tính bảo toàn năng lượng trong miền khảo sát.
 
 
-\subsection{Phân tích Topology của mạng từ trở 3D}
+Bằng cách sử dụng chỉ số trục $s \in \{r, \theta, z\}$ và chỉ số hướng $d \in \{0, 1\}$, phương trình cân bằng thông lượng tại nút $P_{i,j,k}$ được thiết lập dưới dạng tổng quát thông qua biểu thức:
+\begin{equation}
+    \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} (-1)^{d+1} \cdot \phi_{s,d,i,j,k} = 0
+\end{equation}
+Trong đó, hệ số $(-1)^{d+1}$ đóng vai trò xác định chiều của dòng thông lượng đối với nút thế trung tâm. Cụ thể, khi $d=0$, thông lượng $\phi_{s,0,i,j,k}$ hướng vào nút và mang dấu âm; ngược lại, khi $d=1$, thông lượng $\phi_{s,1,i,j,k}$ hướng ra khỏi nút và mang dấu dương.
 
-\begin{comment}
-Phần này phân tích số lượng nhánh, nút, và từ đó tìm ra số vòng độc lập, số nút độc lập. Giới thiệu rằng có 2 phương pháp để thiết lập phương trình: dùng biến từ thế nút và từ thông vòng, tuy nhiên với số lượng vòng độc lập và nút độc lập vừa tìm được thì việc viết phương trình dựa trên biến từ thế nút là đơn giản hơn ( dù có bất lợi về tính ổn định và tính hội tụ).
-\end{comment}
+Việc thiết lập phương trình theo cấu trúc này cho phép bao quát toàn bộ các tương tác từ tính trong không gian ba chiều của phần tử lục diện. Giá trị thông lượng trên mỗi nhánh $\phi_{s,d,i,j,k}$ được xác định dựa trên sự chênh lệch thế từ giữa nút $P_{i,j,k}$ và các ranh giới mặt, kết hợp với các nguồn sức từ động nội tại $F_{s,d,i,j,k}$ và độ dẫn từ nhánh $G_{s,d,i,j,k}$. Sự cân bằng này không chỉ phản ánh mối liên hệ cục bộ giữa các phần tử kế cận mà còn là cơ sở toán học duy nhất để đóng kín hệ thống các biến thế nút trong mạng 3D-MRN.
 
-Trước khi tiến hành thiết lập hệ phương trình, việc phân tích đặc điểm hình học và cấu trúc liên kết (topology) của mạng lưới đóng vai trò quyết định. Dựa trên lưới cấu trúc đã xác định ở Section 2, các thành phần cơ bản của mạng từ trở 3D bao gồm:
+\subsubsection{Phương trình từ thông}
 
-\begin{itemize}
-    \item \textbf{Số lượng nút ($N$):} Tổng số nút mạng được xác định bởi tích số lượng điểm chia trên các trục tọa độ: $N = n_r \cdot n_\theta \cdot n_z$.
-    \item \textbf{Số lượng nhánh ($B$):} Với cấu trúc mỗi nút nội vùng kết nối với 6 nút lân cận, tổng số nhánh trong mạng lưới xấp xỉ gấp 3 lần số lượng nút ($B \approx 3N$).
-    \item \textbf{Số lượng vòng độc lập ($L$):} Theo lý thuyết đồ thị, số lượng phương trình vòng cần thiết để mô tả mạng điện/từ được tính theo công thức: $L = B - N + 1$.
-    \item \textbf{Số lượng nút độc lập:} Để giải bằng phương pháp thế, ta cần xác định $N-1$ nút độc lập (với một nút được chọn làm gốc từ thế $\phi = 0$).
-\end{itemize}
+Thông lượng $\phi_{s,d,i,j,k}$ trên nhánh nội tại được xác định bởi chênh lệch thế giữa nút trung tâm $P_{i,j,k}$ và nút lân cận $P_{i',j',k'}$, kết hợp với các thông số tương đương trên nhánh nối:
+\begin{equation}
+    \phi_{s,d,i,j,k} = \frac{(P_{i,j,k} - P_{i',j',k'})(-1)^d + F_{eq}}{R_{eq}}
+\end{equation}
+Trong đó, tọa độ nút lân cận $(i', j', k')$ theo các phương $s \in \{r, \theta, z\}$ lần lượt là $(i + (-1)^{d+1}, j, k)$, $(i, j + (-1)^{d+1}, k)$, và $(i, j, k + (-1)^{d+1})$. Các giá trị $R_{eq}$ và $F_{eq}$ lần lượt đại diện cho từ trở và nguồn sức từ động tổng cộng trên nhánh, được xác định thông qua sự kết hợp của các thành phần nội tại từ hai phần tử tiếp giáp tại mặt ranh giới chung:
+\begin{equation}
+    R_{eq} = R_{s,d,i,j,k} + R_{s,1-d,i',j',k'}
+\end{equation}
+\begin{equation}
+    F_{eq} = F_{s,d,i,j,k} + F_{s,1-d,i',j',k'}
+\end{equation}
+Thành phần $(-1)^d$ đóng vai trò chuẩn hóa dấu, giúp biểu thức tự động xác định hiệu thế từ theo đúng quy ước hướng $d=1$ (hướng ra) và $d=0$ (hướng vào). Việc biểu diễn thông lượng hoàn toàn qua hệ chỉ số lưới và các phương trình tương đương này giúp đồng nhất logic giữa mô hình toán học và thuật toán lập trình ma trận trong mạng 3D-MRN.
+
+\subsection{Matrix Assembly}
+
+Hệ phương trình đại số thu được từ việc tập hợp tất cả các phương trình cân bằng thông lượng tại nút trong mạng 3D-MRN được biểu diễn dưới dạng ma trận toán học tổng quát $\mathbf{G} \cdot \mathbf{P} = \mathbf{F}$. Ma trận độ dẫn toàn cục $\mathbf{G}$ là loại ma trận thưa (sparse matrix), đối xứng và xác định dương, trong đó mỗi hàng chỉ chứa tối đa bảy phần tử khác không tương ứng với nút thế trung tâm và sáu nút lân cận theo các hướng không gian. Để tối ưu hóa tài nguyên bộ nhớ và tốc độ thực thi cho các hệ thống có số lượng nút lớn, ma trận này thường được lưu trữ và tính toán dưới các định dạng nén chuyên dụng như Compressed Sparse Row (CSR) hoặc Compressed Sparse Column (CSC).
+
+Kích thước của ma trận hệ thống được xác định trực tiếp bởi tổng số nút thế cần giải trong miền khảo sát 3D. Nếu gọi $N_r, N_\theta, N_z$ lần lượt là số lượng phần tử rời rạc dọc theo các trục hướng tâm, tiếp tuyến và dọc trục, thì tổng số biến thế nút $N$ được xác định bởi biểu thức:
+\begin{equation}
+    N = N_r \cdot N_\theta \cdot N_z
+\end{equation}
+Tương ứng với số lượng ẩn số này, kích thước của ma trận độ dẫn toàn cục $\mathbf{G}$ và vector nguồn $\mathbf{F}$ lần lượt là:
+\begin{equation}
+    \text{dim}(\mathbf{G}) = N \times N
+\end{equation}
+\begin{equation}
+    \text{dim}(\mathbf{F}) = N \times 1
+\end{equation}
 
 
 
-Trong lý thuyết tính toán mạch từ, có hai hướng tiếp cận chính để thiết lập hệ phương trình ma trận: phương pháp từ thông vòng (biến là từ thông $\Phi$) và phương pháp từ thế nút (biến là từ thế $\phi$). 
-
-\begin{enumerate}
-    \item \textbf{Phương pháp từ thông vòng:} Đòi hỏi việc xác định $L$ vòng độc lập. Trong không gian 3D, thuật toán tìm kiếm và quản lý các vòng từ thông kín cực kỳ phức tạp, đặc biệt khi mô hình có sự thay đổi liên kết do chuyển động quay.
-    \item \textbf{Phương pháp từ thế nút:} Chỉ yêu cầu xác định các nút mạng, điều này cực kỳ đơn giản và trực quan đối với lưới cấu trúc 3D.
-\end{enumerate}
-
-Mặc dù phương pháp từ thế nút có những bất lợi nhất định về tính ổn định số học và tốc độ hội tụ trong các bài toán bão hòa mạnh so với phương pháp dòng vòng (vốn bảo toàn từ thông tốt hơn), nhưng do sự đơn giản vượt trội trong việc xác định các thực thể topo và lập trình tự động hóa, chúng tôi quyết định lựa chọn phương pháp từ thế nút làm cơ sở cốt lõi cho mô hình 3D-MBGRN này.
-
-\subsection{Global Matrix System Assembly}
-
-\subsection{Non-linear Analysis and Jacobian Matrix}
-
-\subsection{Iterative Solvers and Convergence Criteria}
+Đặc điểm quan trọng của cấu trúc ma trận này trong mô phỏng 3D-MRN là tính cố định về mặt hình học; nghĩa là vị trí của các phần tử khác không trong ma trận $\mathbf{G}$ không thay đổi trong suốt quá trình dịch chuyển của rotor nhờ kỹ thuật dịch chỉ số lưới. Điều này cho phép hệ thống duy trì một cấu trúc thưa duy nhất, giúp tăng tốc đáng kể quá trình lặp Newton-Raphson và các bước giải hệ phương trình tuyến tính ở các bước thời gian kế tiếp.
 
 
+\begin{equation}
+\sum_{\substack{s \in {r, \theta, z} \ d \in {0, 1}}} \frac{P_{i',j',k'} - P_{i,j,k} + (-1)^{d+1} F_{eq}}{R_{eq}} = 0
+\end{equation}

@@ -1,53 +1,127 @@
 \section{Numerical Implement}
-\subsection{Các phương trình bảo toàn cục bộ }
-\subsubsection{Phương trình bảo toàn thông lượng tại nút}
-Nguyên lý cốt lõi để giải quyết bài toán phân bố trường trong mạng 3D-MRN là việc áp dụng định luật bảo toàn thông lượng từ tại từng nút thế trung tâm $P_{i,j,k}$. Theo bản chất không nguồn của từ trường, tổng đại số của tất cả các dòng thông lượng từ $\phi_{s,d,i,j,k}$ đi qua sáu nhánh nội tại kết nối với nút thế phải triệt tiêu hoàn toàn nhằm đảm bảo tính bảo toàn năng lượng trong miền khảo sát.
 
 
-Bằng cách sử dụng chỉ số trục $s \in \{r, \theta, z\}$ và chỉ số hướng $d \in \{0, 1\}$, phương trình cân bằng thông lượng tại nút $P_{i,j,k}$ được thiết lập dưới dạng tổng quát thông qua biểu thức:
+\subsection{Các phương trình bảo toàn cục bộ}
+
+Nguyên lý cốt lõi để giải quyết bài toán phân bố trường trong mạng 3D-MRN là áp dụng định luật bảo toàn thông lượng từ tại từng nút thế trung tâm $P_{i,j,k}$. Theo bản chất không nguồn của từ trường, tổng đại số của tất cả các dòng thông lượng từ $\phi_{s,d,i,j,k}$ đi qua sáu nhánh nội tại kết nối với nút thế phải triệt tiêu nhằm đảm bảo tính bảo toàn năng lượng. Bằng cách sử dụng chỉ số trục $s \in \{r, \theta, z\}$ và chỉ số hướng $d \in \{0, 1\}$, phương trình cân bằng thông lượng tại nút được thiết lập như sau:
 \begin{equation}
     \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} (-1)^{d+1} \cdot \phi_{s,d,i,j,k} = 0
 \end{equation}
-Trong đó, hệ số $(-1)^{d+1}$ đóng vai trò xác định chiều của dòng thông lượng đối với nút thế trung tâm. Cụ thể, khi $d=0$, thông lượng $\phi_{s,0,i,j,k}$ hướng vào nút và mang dấu âm; ngược lại, khi $d=1$, thông lượng $\phi_{s,1,i,j,k}$ hướng ra khỏi nút và mang dấu dương.
 
-Việc thiết lập phương trình theo cấu trúc này cho phép bao quát toàn bộ các tương tác từ tính trong không gian ba chiều của phần tử lục diện. Giá trị thông lượng trên mỗi nhánh $\phi_{s,d,i,j,k}$ được xác định dựa trên sự chênh lệch thế từ giữa nút $P_{i,j,k}$ và các ranh giới mặt, kết hợp với các nguồn sức từ động nội tại $F_{s,d,i,j,k}$ và độ dẫn từ nhánh $G_{s,d,i,j,k}$. Sự cân bằng này không chỉ phản ánh mối liên hệ cục bộ giữa các phần tử kế cận mà còn là cơ sở toán học duy nhất để đóng kín hệ thống các biến thế nút trong mạng 3D-MRN.
-
-\subsubsection{Phương trình từ thông}
-
-Thông lượng $\phi_{s,d,i,j,k}$ trên nhánh nội tại được xác định bởi chênh lệch thế giữa nút trung tâm $P_{i,j,k}$ và nút lân cận $P_{i',j',k'}$, kết hợp với các thông số tương đương trên nhánh nối:
+Để xác định dòng thông lượng, trước hết ta thiết lập các thông số vật lý tương đương trên nhánh nối giữa nút $P_{i,j,k}$ và nút lân cận $P_{i',j',k'}$. Tọa độ nút lân cận theo các phương $s$ lần lượt là $(i + (-1)^{d+1}, j, k)$, $(i, j + (-1)^{d+1}, k)$, và $(i, j, k + (-1)^{d+1})$. Từ trở và nguồn sức từ động tương đương trên mỗi nhánh được xác định bởi tổng các thành phần nội tại từ hai phần tử tiếp giáp:
 \begin{equation}
-    \phi_{s,d,i,j,k} = \frac{(P_{i,j,k} - P_{i',j',k'})(-1)^d + F_{eq}}{R_{eq}}
-\end{equation}
-Trong đó, tọa độ nút lân cận $(i', j', k')$ theo các phương $s \in \{r, \theta, z\}$ lần lượt là $(i + (-1)^{d+1}, j, k)$, $(i, j + (-1)^{d+1}, k)$, và $(i, j, k + (-1)^{d+1})$. Các giá trị $R_{eq}$ và $F_{eq}$ lần lượt đại diện cho từ trở và nguồn sức từ động tổng cộng trên nhánh, được xác định thông qua sự kết hợp của các thành phần nội tại từ hai phần tử tiếp giáp tại mặt ranh giới chung:
-\begin{equation}
-    R_{eq} = R_{s,d,i,j,k} + R_{s,1-d,i',j',k'}
+    R_{eq,s,d,i,j,k} = R_{s,d,i,j,k} + R_{s,1-d,i',j',k'}
 \end{equation}
 \begin{equation}
-    F_{eq} = F_{s,d,i,j,k} + F_{s,1-d,i',j',k'}
+    F_{eq,s,d,i,j,k} = F_{s,d,i,j,k} + F_{s,1-d,i',j',k'}
 \end{equation}
-Thành phần $(-1)^d$ đóng vai trò chuẩn hóa dấu, giúp biểu thức tự động xác định hiệu thế từ theo đúng quy ước hướng $d=1$ (hướng ra) và $d=0$ (hướng vào). Việc biểu diễn thông lượng hoàn toàn qua hệ chỉ số lưới và các phương trình tương đương này giúp đồng nhất logic giữa mô hình toán học và thuật toán lập trình ma trận trong mạng 3D-MRN.
+
+Dựa trên các giá trị vật lý nêu trên, độ dẫn từ tương đương và nguồn từ thông tương đương trên nhánh lần lượt được định nghĩa thông qua các biểu thức sau:
+\begin{equation}
+    G_{eq,s,d,i,j,k} = \frac{1}{R_{eq,s,d,i,j,k}}
+\end{equation}
+\begin{equation}
+    J_{eq,s,d,i,j,k} = G_{eq,s,d,i,j,k} \cdot F_{eq,s,d,i,j,k}
+\end{equation}
+
+Khi đó, thông lượng $\phi_{s,d,i,j,k}$ chạy trên nhánh được biểu diễn ngắn gọn như sau:
+\begin{equation}
+    \phi_{s,d,i,j,k} = G_{eq,s,d,i,j,k} (P_{i,j,k} - P_{i',j',k'})(-1)^d + J_{eq,s,d,i,j,k}
+\end{equation}
+
+Từ giá trị thông lượng, mật độ từ thông trên từng nhánh được xác định nhằm phục vụ quy trình tra cứu đặc tính phi tuyến $\mu(B)$ từ đường cong $B-H$ của vật liệu:
+\begin{equation}
+    B_{s,d,i,j,k} = \frac{|\phi_{s,d,i,j,k}|}{A_{s,i,j,k}}
+\end{equation}
+
+Trong đó, $A_{s}$ là diện tích mặt cắt tương ứng với phương $s \in \{r, \theta, z\}$. Việc xác định chính xác mật độ từ thông tại từng nhánh nội tại là tiền đề bắt buộc để cập nhật độ từ thẩm và tái thiết lập ma trận độ dẫn trong các bước lặp tiếp theo của bộ giải.
+
+Bằng cách thay thế biểu thức thông lượng vào phương trình bảo toàn và thực hiện chuyển vế các thành phần nguồn, ta thu được phương trình thế nút hợp nhất cho toàn hệ thống:
+\begin{equation}
+\begin{aligned}
+    \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} & G_{eq,s,d,i,j,k} (P_{i,j,k} - P_{i',j',k'}) = \\
+    & \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} (-1)^{d+1} \cdot J_{eq,s,d,i,j,k}
+\end{aligned}
+\end{equation}
+Sự kết hợp giữa các đại lượng tương đương này không chỉ làm rõ mối liên kết giữa các nút thế lân cận mà còn tạo cơ sở trực tiếp để định nghĩa các phần tử trong ma trận độ dẫn toàn cục và vector nguồn của bộ giải 3D-MRN.  
 
 \subsection{Matrix Assembly}
 
-Hệ phương trình đại số thu được từ việc tập hợp tất cả các phương trình cân bằng thông lượng tại nút trong mạng 3D-MRN được biểu diễn dưới dạng ma trận toán học tổng quát $\mathbf{G} \cdot \mathbf{P} = \mathbf{F}$. Ma trận độ dẫn toàn cục $\mathbf{G}$ là loại ma trận thưa (sparse matrix), đối xứng và xác định dương, trong đó mỗi hàng chỉ chứa tối đa bảy phần tử khác không tương ứng với nút thế trung tâm và sáu nút lân cận theo các hướng không gian. Để tối ưu hóa tài nguyên bộ nhớ và tốc độ thực thi cho các hệ thống có số lượng nút lớn, ma trận này thường được lưu trữ và tính toán dưới các định dạng nén chuyên dụng như Compressed Sparse Row (CSR) hoặc Compressed Sparse Column (CSC).
-
-Kích thước của ma trận hệ thống được xác định trực tiếp bởi tổng số nút thế cần giải trong miền khảo sát 3D. Nếu gọi $N_r, N_\theta, N_z$ lần lượt là số lượng phần tử rời rạc dọc theo các trục hướng tâm, tiếp tuyến và dọc trục, thì tổng số biến thế nút $N$ được xác định bởi biểu thức:
+Hệ thống các phương trình bảo toàn cục bộ được tổng hợp thành hệ phương trình đại số toàn cục mô tả trạng thái cân bằng từ tính của toàn bộ miền khảo sát dưới dạng ma trận:
 \begin{equation}
-    N = N_r \cdot N_\theta \cdot N_z
+    \mathbf{G}(\mathbf{P}) \cdot \mathbf{P} = \mathbf{J}
 \end{equation}
-Tương ứng với số lượng ẩn số này, kích thước của ma trận độ dẫn toàn cục $\mathbf{G}$ và vector nguồn $\mathbf{F}$ lần lượt là:
+Trong đó, cấu tạo của mỗi dòng trong hệ phương trình tương ứng với phương trình cân bằng thông lượng tại một nút độc lập. Ma trận độ dẫn toàn cục $\mathbf{G}(\mathbf{P})$ mang đặc tính thưa, đối xứng và phụ thuộc vào vector ẩn số thế từ $\mathbf{P}$ do tính phi tuyến của vật liệu sắt từ.
+
+Để hệ phương trình có nghiệm duy nhất và triệt tiêu tính suy biến của ma trận độ dẫn, một nút bất kỳ trong tổng số $q_E$ nút được chọn làm nút tham chiếu với giá trị thế từ mặc định bằng không. Quá trình lắp ghép ma trận sẽ được thực hiện trên tập hợp các nút độc lập còn lại, tạo nên hệ phương trình có kích thước $(q_E - 1) \times (q_E - 1)$.
+
+Dựa trên chỉ số phẳng $f$ đã được thiết lập, mỗi nút thế $P_{i,j,k}$ được ánh xạ trực tiếp vào một hàng $I$ tương ứng trong ma trận hệ thống. Các phần tử của ma trận $\mathbf{G}$ và vector nguồn $\mathbf{J}$ tại hàng $I$ lần lượt được xác định từ các đại lượng tương đương $G_{eq}$ và $J_{eq}$ của sáu nhánh kết nối:
 \begin{equation}
-    \text{dim}(\mathbf{G}) = N \times N
+    G_{I,I} = \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} G_{eq,s,d,i,j,k}
 \end{equation}
 \begin{equation}
-    \text{dim}(\mathbf{F}) = N \times 1
+    G_{I,J} = -G_{eq,s,d,i,j,k}
 \end{equation}
-
-
-
-Đặc điểm quan trọng của cấu trúc ma trận này trong mô phỏng 3D-MRN là tính cố định về mặt hình học; nghĩa là vị trí của các phần tử khác không trong ma trận $\mathbf{G}$ không thay đổi trong suốt quá trình dịch chuyển của rotor nhờ kỹ thuật dịch chỉ số lưới. Điều này cho phép hệ thống duy trì một cấu trúc thưa duy nhất, giúp tăng tốc đáng kể quá trình lặp Newton-Raphson và các bước giải hệ phương trình tuyến tính ở các bước thời gian kế tiếp.
-
-
 \begin{equation}
-\sum_{\substack{s \in {r, \theta, z} \ d \in {0, 1}}} \frac{P_{i',j',k'} - P_{i,j,k} + (-1)^{d+1} F_{eq}}{R_{eq}} = 0
+    J_I = \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} (-1)^{d+1} \cdot J_{eq,s,d,i,j,k}
 \end{equation}
+Trong đó, $J$ là chỉ số phẳng của các nút lân cận tương ứng với hướng $d$ và phương $s$. Việc duy trì cấu trúc lưới cố định và sử dụng chỉ số phẳng đồng nhất cho phép bộ giải `semiFEM` khai thác hiệu quả các định dạng lưu trữ nén như CSR, tối ưu hóa tốc độ hội tụ của thuật toán khi giải bài toán từ trường 3D phi tuyến.
+
+\begin{algorithm}[H]
+\caption{3D-MRN Matrix Assembly Procedure}
+\label{alg:assembly}
+\begin{algorithmic}[1]
+\STATE \textbf{Input:} $N_r, N_\theta, N_z, G_{eq}, J_{eq}$
+\STATE \textbf{Output:} Sparse matrix $\mathbf{G}$, Vector $\mathbf{J}$
+\STATE Initialize $\mathbf{G} \leftarrow \text{Zeros}((q_E-1) \times (q_E-1))$
+\STATE Initialize $\mathbf{J} \leftarrow \text{Zeros}((q_E-1) \times 1)$
+\FOR{each node $f$ from $0$ to $q_E-1$}
+    \IF{$f$ is not $reference\_node$}
+        \STATE Identify independent row index $I$
+        \FOR{each axis $s \in \{r, \theta, z\}$ and direction $d \in \{0, 1\}$}
+            \STATE Identify neighbor node $f_{neighbor}$
+            \STATE $G_{I,I} \leftarrow G_{I,I} + G_{eq,s,d,i,j,k}$
+            \IF{$f_{neighbor}$ is independent}
+                \STATE Identify column index $J$
+                \STATE $G_{I,J} \leftarrow -G_{eq,s,d,i,j,k}$
+            \ENDIF
+            \STATE $J_I \leftarrow J_I + (-1)^{d+1} J_{eq,s,d,i,j,k}$
+        \ENDFOR
+    \ENDIF
+\ENDFOR
+\STATE \RETURN $\mathbf{G}, \mathbf{J}$
+\end{algorithmic}
+\end{algorithm}
+
+Ma trận $\mathbf{G}$ đối xứng thực ($G_{I,J} = G_{J,I}$) và thưa với cấu trúc 7-point stencil. Tính đối xứng được xác định bởi tính tương hỗ của nhánh nối giữa hai nút lân cận:
+\begin{equation}
+    G_{I,J} = G_{J,I} = -\frac{1}{R_{s,d,i,j,k} + R_{s,1-d,i',j',k'}}
+\end{equation}
+Cấu trúc thưa này cho phép hệ thống $q_E - 1$ phương trình được lưu trữ hiệu quả dưới định dạng nén CSR (Compressed Sparse Row), giúp tiết kiệm đáng kể tài nguyên bộ nhớ trong quá trình thực thi bộ giải.
+
+\subsection{Nonlinear Solver and Adaptive Material Relaxation Method}
+
+Hệ phương trình $\mathbf{G}(\mathbf{P}) \cdot \mathbf{P} = \mathbf{J}$ mang tính phi tuyến do ma trận độ dẫn toàn cục $\mathbf{G}$ được cấu thành từ các từ trở nhánh $R_{eq}$, vốn phụ thuộc trực tiếp vào độ từ thẩm $\mu_r$ – một đại lượng biến thiên phi tuyến theo mật độ từ thông $B$ của vật liệu sắt từ. Vì $B$ lại là hàm của vector thế nút $\mathbf{P}$, dẫn đến sự phụ thuộc lẫn nhau giữa cấu trúc ma trận và nghiệm của hệ. Để tìm nghiệm hội tụ, một quy trình lặp điểm cố định kết hợp với kỹ thuật thư giãn vật liệu (Material Relaxation) được thiết lập. Tại mỗi bước lặp, hệ số thư giãn $\alpha$ được điều chỉnh giảm dần theo hệ số suy giảm $b$ ($0 < b < 1$) để đảm bảo tính ổn định của nghiệm. Chi tiết quy trình được trình bày trong Thuật toán sau:
+
+\begin{algorithm}[H]
+\caption{Nonlinear Solver with Adaptive Relaxation}
+\label{alg:nonlinear}
+\begin{algorithmic}[1]
+\STATE \textbf{Input:} $\mathbf{J}$, $\epsilon$, $\alpha_{init}$, $b$
+\STATE \textbf{Initial:} $\mu_r^{(0)} \leftarrow 1$, $\alpha \leftarrow \alpha_{init}$, $k \leftarrow 0$, $\mathbf{P}^{(0)} \leftarrow \mathbf{0}$
+\WHILE{not converged}
+    \STATE $k \leftarrow k + 1$
+    \STATE Assemble $\mathbf{G}(\mu_r^{(k-1)})$
+    \STATE Solve $\mathbf{G} \cdot \mathbf{P}^{(k)} = \mathbf{J}$
+    \STATE Calculate $B_{s,d,i,j,k}$ from $\mathbf{P}^{(k)}$ for each branch
+    \STATE Look up $\mu_{r,calc}$ from $B-H$ curve
+    \STATE $\mu_r^{(k)} \leftarrow \mu_r^{(k-1)} + \alpha \cdot (\mu_{r,calc} - \mu_r^{(k-1)})$
+    \STATE $\alpha \leftarrow \alpha \cdot b$ \COMMENT{Cập nhật hệ số damping}
+    \STATE $e^{(k)} \leftarrow \|\mathbf{P}^{(k)} - \mathbf{P}^{(k-1)}\| / \|\mathbf{P}^{(k)}\|$
+    \IF{$e^{(k)} < \epsilon$}
+        \STATE \textbf{break}
+    \ENDIF
+\ENDWHILE
+\STATE \textbf{Output:} $\mathbf{P}^{(k)}$, $\mathbf{B}^{(k)}$
+\end{algorithmic}
+\end{algorithm}

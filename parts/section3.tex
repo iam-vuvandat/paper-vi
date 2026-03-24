@@ -1,1 +1,49 @@
-\section{Simulation Results and Performance Validation}
+\section{Simulation Setup and Case Study}
+
+Để đánh giá hiệu năng của bộ giải 3D-MRN và thuật toán lặp thích nghi, một mô hình động cơ hướng trục (AFM) tiêu biểu với cấu trúc Stator đơn - Rotor đơn được lựa chọn làm đối tượng nghiên cứu. Mục tiêu là kiểm chứng độ chính xác của mô hình mạng từ trở 3D trong việc tính toán phân bố trường và khả năng hội tụ của bộ giải khi sắt từ rơi vào trạng thái bão hòa.
+
+\subsection{Thông số thiết kế động cơ và Vật liệu}
+
+Các thông số hình học và vận hành định mức của động cơ được liệt kê chi tiết trong Bảng . Lõi sắt của Stator và Rotor sử dụng vật liệu thép kỹ thuật điện M270-50A. Đặc tính phi tuyến của vật liệu được cập nhật liên tục thông qua đường cong $B-H$ thực nghiệm trong quá trình giải.
+
+\begin{table}[h]
+\centering
+\caption{Thông số kỹ thuật của mô hình động cơ hướng trục}
+
+\begin{tabular}{lcc}
+\hline
+\textbf{Thông số} & \textbf{Ký hiệu} & \textbf{Giá trị} \\ \hline
+Đường kính ngoài / Đường kính trong & $D_{out} / D_{in}$ & 150 / 90 mm \\
+Số rãnh Stator / Số cực Rotor & $N_s / 2p$ & 12 / 10 \\
+Khe hở không khí & $g$ & 1.0 mm \\
+Số vòng dây mỗi pha & $N_{ph}$ & 100 \\
+Dòng điện định mức & $I_{rated}$ & 5.0 A \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Cấu hình lưới và Tham số thuật toán}
+
+Không gian tính toán được rời rạc hóa thành hệ thống lưới $m \times n \times p$ trong hệ tọa độ trụ. Việc lựa chọn mật độ lưới cân bằng giữa độ chính xác và chi phí tính toán. Các tham số điều khiển bộ giải phi tuyến, bao gồm hệ số damping suy giảm $b$, được thiết lập để đảm bảo sự ổn định tại các vùng bão hòa mạnh.
+
+\begin{table}[h]
+\centering
+\caption{Thiết lập lưới và tham số điều khiển bộ giải}
+\label{tab:solver_params}
+\begin{tabular}{lcc}
+\hline
+\textbf{Tham số} & \textbf{Ký hiệu} & \textbf{Giá trị} \\ \hline
+Kích thước lưới (r, $\theta$, z) & $m, n, p$ & 15, 120, 20 \\
+Tổng số nút thế trong mạng lưới & $q_E$ & 36,000 \\
+Sai số hội tụ mục tiêu & $\epsilon$ & $10^{-4}$ \\
+Hệ số thư giãn ban đầu & $\alpha_{init}$ & 0.8 \\
+Hệ số suy giảm damping hằng số & $b$ & 0.95 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Kịch bản kiểm chứng}
+
+Quá trình mô phỏng được thực hiện với hai mức kích thích dòng điện trên cùng một mô hình hình học:
+\begin{itemize}
+    \item \textbf{Mức tải định mức (5.0 A):} Dùng để đối chứng mật độ từ thông $B$ với kết quả từ phần mềm Ansys Maxwell 3D, khẳng định độ chính xác của phương pháp 3D-MRN.
+    \item \textbf{Mức tải cực đại (25.0 A):} Ép lõi sắt vận hành sâu trong vùng bão hòa. Kịch bản này dùng để trình diễn hiệu quả của hệ số $b$ trong việc triệt tiêu dao động nghiệm và thúc đẩy quá trình hội tụ tại những điểm làm việc có độ từ thẩm $\mu_r$ thay đổi đột ngột.
+\end{itemize}

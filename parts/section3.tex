@@ -1,49 +1,70 @@
-\section{Simulation Setup and Case Study}
+\section{Post Processing}
+\subsection{Air gap flux density}
+Giá trị từ thông trung bình theo các phương được xác định:
 
-Để đánh giá hiệu năng của bộ giải 3D-MRN và thuật toán lặp thích nghi, một mô hình động cơ hướng trục (AFM) tiêu biểu với cấu trúc Stator đơn - Rotor đơn được lựa chọn làm đối tượng nghiên cứu. Mục tiêu là kiểm chứng độ chính xác của mô hình mạng từ trở 3D trong việc tính toán phân bố trường và khả năng hội tụ của bộ giải khi sắt từ rơi vào trạng thái bão hòa.
+\begin{equation}
+\varphi_{s,i,j,k} = \frac{\varphi_{s,0,i,j,k} + \varphi_{s,1,i,j,k}}{2}, \quad s \in \{r, \theta, z\}
+\end{equation}
 
-\subsection{Thông số thiết kế động cơ và Vật liệu}
 
-Các thông số hình học và vận hành định mức của động cơ được liệt kê chi tiết trong Bảng . Lõi sắt của Stator và Rotor sử dụng vật liệu thép kỹ thuật điện M270-50A. Đặc tính phi tuyến của vật liệu được cập nhật liên tục thông qua đường cong $B-H$ thực nghiệm trong quá trình giải.
 
-\begin{table}[h]
-\centering
-\caption{Thông số kỹ thuật của mô hình động cơ hướng trục}
 
-\begin{tabular}{lcc}
-\hline
-\textbf{Thông số} & \textbf{Ký hiệu} & \textbf{Giá trị} \\ \hline
-Đường kính ngoài / Đường kính trong & $D_{out} / D_{in}$ & 150 / 90 mm \\
-Số rãnh Stator / Số cực Rotor & $N_s / 2p$ & 12 / 10 \\
-Khe hở không khí & $g$ & 1.0 mm \\
-Số vòng dây mỗi pha & $N_{ph}$ & 100 \\
-Dòng điện định mức & $I_{rated}$ & 5.0 A \\ \hline
-\end{tabular}
-\end{table}
+Mật độ từ thông của mỗi nhánh theo các hướng hướng tâm, hướng tiếp tuyến và hướng trục được xác định thông qua từ thông chảy qua mỗi nhánh và diện tích các mặt của phần tử: 
 
-\subsection{Cấu hình lưới và Tham số thuật toán}
+\begin{equation}
+    B_{s,i,j,k} = \frac{\varphi_{s,i,j,k}}{A_{s,i,j,k}} , \quad s \in \{r, \theta, z\}
+\end{equation}
 
-Không gian tính toán được rời rạc hóa thành hệ thống lưới $m \times n \times p$ trong hệ tọa độ trụ. Việc lựa chọn mật độ lưới cân bằng giữa độ chính xác và chi phí tính toán. Các tham số điều khiển bộ giải phi tuyến, bao gồm hệ số damping suy giảm $b$, được thiết lập để đảm bảo sự ổn định tại các vùng bão hòa mạnh.
+Mật độ từ thông trung bình trên mỗi phần tử được xác định:
 
-\begin{table}[h]
-\centering
-\caption{Thiết lập lưới và tham số điều khiển bộ giải}
-\label{tab:solver_params}
-\begin{tabular}{lcc}
-\hline
-\textbf{Tham số} & \textbf{Ký hiệu} & \textbf{Giá trị} \\ \hline
-Kích thước lưới (r, $\theta$, z) & $m, n, p$ & 15, 120, 20 \\
-Tổng số nút thế trong mạng lưới & $q_E$ & 36,000 \\
-Sai số hội tụ mục tiêu & $\epsilon$ & $10^{-4}$ \\
-Hệ số thư giãn ban đầu & $\alpha_{init}$ & 0.8 \\
-Hệ số suy giảm damping hằng số & $b$ & 0.95 \\ \hline
-\end{tabular}
-\end{table}
+\begin{equation}
+B_{i,j,k} = \sqrt{B_{r,i,j,k}^2 +B_{\theta,i,j,k}^2 + B_{z,i,j,k}^2 }
+\end{equation}
 
-\subsection{Kịch bản kiểm chứng}
+\subsection{Flux linkage and Back EMF}
+\subsubsection{Flux linkage}
+Để tiện lợi cho việc xử lý sau này, từ thông của mỗi phần tử được xếp thành một vector: 
 
-Quá trình mô phỏng được thực hiện với hai mức kích thích dòng điện trên cùng một mô hình hình học:
-\begin{itemize}
-    \item \textbf{Mức tải định mức (5.0 A):} Dùng để đối chứng mật độ từ thông $B$ với kết quả từ phần mềm Ansys Maxwell 3D, khẳng định độ chính xác của phương pháp 3D-MRN.
-    \item \textbf{Mức tải cực đại (25.0 A):} Ép lõi sắt vận hành sâu trong vùng bão hòa. Kịch bản này dùng để trình diễn hiệu quả của hệ số $b$ trong việc triệt tiêu dao động nghiệm và thúc đẩy quá trình hội tụ tại những điểm làm việc có độ từ thẩm $\mu_r$ thay đổi đột ngột.
-\end{itemize}
+\begin{equation}
+\mathbf{\Phi}_{i,j,k} = [\varphi_{r,i,j,k},\varphi_{\theta,i,j,k},\varphi_{z,i,j,k}]^T
+\end{equation}
+
+
+
+
+Trong mô hình này, từ thông liên kết $\mathbf{\Psi} = [\psi_1, \psi_2,\dots,\psi_m]^T$ được đóng góp bởi tất cả phần tử theo công thức: 
+
+\begin{equation}
+\mathbf{\Psi} = k \cdot \sum_{i,j,k} \left( \mathbf{N}_{w,i,j,k}^T \odot (\mathbf{n}_w  \cdot \mathbf{\Phi}_{i,j,k}) \right)
+\end{equation}
+Với miền tính toán được rút gọn, việc nhân với hệ số $k$ giúp khôi phục từ thông liên kết ban đầu.
+\subsubsection{Back EMF}
+Sức phản điện động được xác định bằng đạo hàm theo thời gian của từ thông liên kết:
+
+\begin{equation}
+\mathbf{E} = \frac{d\mathbf{\Psi}}{dt}
+\end{equation}
+
+
+\subsection{Force and Torque calculation}
+
+Quy trình tính toán lực và mô-men điện từ dựa trên phương pháp Maxwell Stress Tensor (MST) được thực hiện bằng cách thiết lập tích phân mặt trên một bề mặt kín $S_g$ bao quanh hoàn toàn bộ phận quay (rotor). Ma trận ứng suất Maxwell $\mathbf{T}$ tại mỗi điểm trên bề mặt này được xác định theo biểu thức:
+\begin{equation}
+    \mathbf{T} = \frac{1}{\mu_0} \left( \mathbf{B} \mathbf{B}^T - \frac{1}{2} B^2 \mathbf{I} \right)
+\end{equation}
+Trong đó, $\mathbf{B} = [B_r, B_\theta, B_z]^T$ là vectơ mật độ từ thông và $\mathbf{I}$ là ma trận đơn vị kích thước $3 \times 3$. Các vectơ pháp tuyến đơn vị $\mathbf{n}$ trong mô hình được xác định tương ứng với các phương của hệ tọa độ trụ là $\mathbf{n}_r = [1, 0, 0]^T, \mathbf{n}_\theta = [0, 1, 0]^T$, và $\mathbf{n}_z = [0, 0, 1]^T$.
+
+Về mặt giải tích, lực dọc trục $F_z$ và mô-men điện từ $T$ được xác định thông qua các tích phân trên mặt kín $S_g$:
+\begin{equation}
+    F_z = \oint_{S_g} (\mathbf{T} \cdot \mathbf{n}) \cdot \mathbf{e}_z \, dS, \quad T = \oint_{S_g} r [(\mathbf{T} \cdot \mathbf{n}) \cdot \mathbf{e}_\theta] \, dS
+\end{equation}
+
+Để triển khai trong giải thuật số, các tích phân trên được chuyển đổi sang dạng xấp xỉ tổng đại số. Gọi $I_{S_g}$ là tập hợp các bộ chỉ số $(i, j, k)$ của các phần tử nằm trên bề mặt tích phân $S_g$, công thức tính toán được thiết lập như sau:
+\begin{equation}
+    F_z = \sum_{(i,j,k) \in I_{S_g}} k_s \cdot [(\mathbf{T}_{i,j,k} \cdot \mathbf{n}) \cdot \mathbf{e}_z] \cdot A_{n,i,j,k}
+\end{equation}
+\begin{equation}
+    T = \sum_{(i,j,k) \in I_{S_g}} k_s \cdot r_{i,j,k} \cdot [(\mathbf{T}_{i,j,k} \cdot \mathbf{n}) \cdot \mathbf{e}_\theta] \cdot A_{n,i,j,k}
+\end{equation}
+
+Tại đây, $\mathbf{T}_{i,j,k}$ là giá trị Maxwell stress tensor tại phần tử có chỉ số $(i, j, k)$. Các đại lượng $A_{n,i,j,k}$ và $r_{i,j,k}$ lần lượt là diện tích pháp tuyến và khoảng cách từ trục $z$ đến tâm của phần tử tương ứng. Hệ số $k_s$ được sử dụng để khôi phục giá trị cho toàn bộ máy từ mô hình mô phỏng bán phần dựa trên đặc tính đối xứng.

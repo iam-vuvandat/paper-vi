@@ -1,15 +1,13 @@
-\section{Simulation Setup and Case Study}
-\subsection{Thông số thiết kế động cơ và Vật liệu}
+\section{Verification by finite element analysis}
+\subsection{Simulation Setup and Case Study}
 
-
+Mô hình động cơ nam châm vĩnh cửu dòng trục (AFPM) với cấu trúc 15 rãnh và 10 cực, sử dụng dây quấn tập trung (concentrated winding) được lựa chọn để kiểm chứng tính chính xác của phương pháp 3D-MRN. Các thông số hình học, thông số định mức và đặc tính vật liệu chi tiết của mô hình được liệt kê trong Bảng \ref{afpm_par}. Trong đó, nam châm vĩnh cửu sử dụng vật liệu NdFe30 và lõi sắt được chế tạo từ thép 1008.
 
 \begin{table}[ht]
 \centering
 \caption{Main parameter of the AFPM}
-
 \begin{tabular}{lcc}
 \hline
-
 \textbf{Parameters} && \textbf{Value}\\
 Rated power         && 1.5 $kW$      \\
 Rated voltage       && 400 $V$       \\ 
@@ -27,8 +25,19 @@ Rotor length && 6 $mm$ \\
 Air gap length         && 1.5 $mm$ \\ 
 Magnet grade           && NdFe30 \\
 Lamination grade       && steel 1008 \\
-
 \hline
 \end{tabular}
 \label{afpm_par}
 \end{table}
+
+Để đơn giản hóa và tăng tốc quá trình tính toán, hệ số tuần hoàn $k_s = 5$ và điều kiện biên chu kỳ được áp dụng cho cả hai phương pháp 3D-MRN và FEM, tương ứng với việc sử dụng $1/5$ mô hình theo phương $\theta$. Điều kiện biên Dirichlet được áp dụng trên ranh giới trong và ngoài của stator và rotor trong cả hai phương pháp.
+
+Nhằm đảm bảo tính tương đồng khi so sánh kết quả, số lượng bước tính toán trong một chu kỳ mô phỏng của cả hai phương pháp được thiết lập bằng nhau và bằng $n$, với $n = 30$. Trong nghiên cứu này, đặc tính mô-men răng (cogging torque) được lựa chọn làm đại lượng kiểm chứng chính. Một chu kỳ biến thiên của mô-men răng theo góc cơ học được xác định bởi biểu thức:
+\begin{equation}
+    \theta_{cog} = \frac{2\pi}{\text{LCM}(Q, 2p)}
+\end{equation}
+Trong đó, $Q$ là số rãnh stator và $2p$ là số cực từ. Do mô hình 3D-MRN thực hiện tính toán dựa trên các bước quay rời rạc, để thu được $n$ điểm dữ liệu trên toàn bộ chu kỳ cogging, bước góc quay $\Delta\theta$ giữa hai lần giải liên tiếp được xác định như sau:
+\begin{equation}
+    \Delta\theta = \frac{\theta_{cog}}{n}
+\end{equation}
+Việc lựa chọn $n=30$ bước tính cho một chu kỳ $\theta_{cog}$ đảm bảo độ phân giải đủ cao để quan sát các đỉnh dao động của mô-men điện từ và đánh giá sai số giữa mô hình mạng điện trở từ và phương pháp phần tử hữu hạn.

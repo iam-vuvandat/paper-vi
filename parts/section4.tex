@@ -32,6 +32,10 @@ Lamination grade       && steel 1008 \\
 
 Để đơn giản hóa và tăng tốc quá trình tính toán, hệ số tuần hoàn $k_s = 5$ và điều kiện biên chu kỳ được áp dụng cho cả hai phương pháp 3D-MRN và FEM, tương ứng với việc sử dụng $1/5$ mô hình theo phương $\theta$. Điều kiện biên Dirichlet được áp dụng trên ranh giới trong và ngoài của stator và rotor trong cả hai phương pháp.
 
+Mật độ lưới của cả hai phương pháp cũng được tinh chỉnh để đạt độ chính xác cao nhất. Đối với 3D-MRN, tại các khu vực xuất hiện biến dạng hình học đáng kể do quá trình rời rạc hóa, mật độ nút lưới được tăng cường nhằm mô tả trung thực sự phân bố từ trường. Trong khi đó, các khu vực tương ứng trong mô hình FEM được kiểm soát thông qua việc thiết lập kích thước phần tử tối đa (maximum element size). Đặc biệt, số lượng lớp phần tử trong miền khe hở không khí của cả hai mô hình được cài đặt không ít hơn 4 lớp nhằm đảm bảo tính chính xác khi trích xuất các thành phần mật độ từ thông phục vụ tính toán ứng suất Maxwell.
+
+Ngoài ra, các cấu hình lưới sử dụng trong nghiên cứu này đều đã trải qua quá trình kiểm tra tính hội tụ để đảm bảo sự cân bằng giữa độ chính xác và chi phí tính toán. Các kết quả trình bày dưới đây được thực hiện với mật độ lưới đã đạt tới ngưỡng hội tụ, nghĩa là kể từ mật độ lưới này trở đi, nếu tiếp tục tinh chỉnh lưới dày hơn thì sai số của kết quả tính toán không vượt quá 2\%.
+
 Nhằm đảm bảo tính tương đồng khi so sánh kết quả, số lượng bước tính toán trong một chu kỳ mô phỏng của cả hai phương pháp được thiết lập bằng nhau và bằng $n$, với $n = 30$. Trong nghiên cứu này, đặc tính mô-men răng (cogging torque) được lựa chọn làm đại lượng kiểm chứng chính. Một chu kỳ biến thiên của mô-men răng theo góc cơ học được xác định bởi biểu thức:
 \begin{equation}
     \theta_{cog} = \frac{2\pi}{\text{LCM}(Q, 2p)}
@@ -41,3 +45,5 @@ Trong đó, $Q$ là số rãnh stator và $2p$ là số cực từ. Do mô hình
     \Delta\theta = \frac{\theta_{cog}}{n}
 \end{equation}
 Việc lựa chọn $n=30$ bước tính cho một chu kỳ $\theta_{cog}$ đảm bảo độ phân giải đủ cao để quan sát các đỉnh dao động của mô-men điện từ và đánh giá sai số giữa mô hình mạng điện trở từ và phương pháp phần tử hữu hạn.
+
+\subsection{Verification}

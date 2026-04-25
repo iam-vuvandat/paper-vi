@@ -3,6 +3,15 @@
 \subsection{Domain Discretization}
 Mô hình đề xuất áp dụng trên một vùng không gian khối trụ rỗng (hollow cylinder) hoặc một phân đoạn hình trụ (cylindrical sector) trong hệ tọa độ trụ - Cylindrical coordinate system $(r, \theta, z)$ nhằm khai thác tối đa đặc tính đối xứng tâm của các máy điện quay. Quá trình rời rạc hóa miền tính toán $\mathbf{\Omega}$ được thực hiện thông qua việc thiết lập ba tập hợp điểm nút lưới (grid points) bao gồm: ma trận bán kính $\mathbf{R} = [r_0, r_1, \dots, r_{m}]$ xác định các lớp từ trục đến vỏ máy; ma trận vị trí góc $\mathbf{\Theta} = [\theta_0, \theta_1, \dots, \theta_{n}]$ rời rạc hóa theo phương tiếp tuyến; và ma trận trục $\mathbf{Z} = [z_0, z_1, \dots, z_{p}]$ rời rạc không gian theo hướng trục. 
 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figure/Figure_1.png}
+    \caption{Rời rạc miền tính toán trong hệ tọa độ trụ}
+    \label{fig1}
+\end{figure}
+
+
 Dựa trên cấu trúc lưới này, toàn bộ miền tính toán được chia thành một tập hợp hữu hạn các phần tử hình học với tổng số lượng $q_{E}$ được xác định bởi:
 \begin{equation}
     q_{E} = m \times n \times p

@@ -1,7 +1,7 @@
 \section{Verification by finite element analysis}
 \subsection{Simulation Setup and Case Study}
 
-Mô hình động cơ nam châm vĩnh cửu dòng trục (AFPM) với cấu trúc 15 rãnh và 10 cực, sử dụng dây quấn tập trung (concentrated winding) được lựa chọn để kiểm chứng tính chính xác của phương pháp 3D-MRN. Các thông số hình học, thông số định mức và đặc tính vật liệu chi tiết của mô hình được liệt kê trong Bảng \ref{afpm_par}. Trong đó, nam châm vĩnh cửu sử dụng vật liệu NdFe30 và lõi sắt được chế tạo từ thép 1008.
+Mô hình động cơ nam châm vĩnh cửu dòng trục (AFPM) với cấu trúc 30 rãnh và 20 cực, sử dụng dây quấn tập trung (concentrated winding) được lựa chọn để kiểm chứng tính chính xác của phương pháp 3D-MRN. Các thông số hình học, thông số định mức và đặc tính vật liệu chi tiết của mô hình được liệt kê trong Bảng \ref{afpm_par}. Trong đó, nam châm vĩnh cửu sử dụng vật liệu NdFe30 và lõi sắt được chế tạo từ thép 1008.
 
 \begin{table}[ht]
 \centering
@@ -14,8 +14,8 @@ Rated voltage       && 400 $V$       \\
 Rated current       && 10 $A$        \\ 
 Rated torque        && 5 $Nm$        \\
 Rated speed         && 3000 $rpm$     \\
-Slot number         && 15  \\ 
-Pole number         && 10 \\ 
+Slot number         && 30  \\ 
+Pole number         && 15 \\ 
 Stator outer diameter && 150 $mm$ \\ 
 Stator inner diameter && 70 $mm$ \\ 
 Stator length       && 25 $mm$ \\
@@ -33,6 +33,13 @@ Lamination grade       && steel 1008 \\
 Để đơn giản hóa và tăng tốc quá trình tính toán, hệ số tuần hoàn $k_s = 5$ và điều kiện biên chu kỳ được áp dụng cho cả hai phương pháp 3D-MRN và FEM, tương ứng với việc sử dụng $1/5$ mô hình theo phương $\theta$. Điều kiện biên Dirichlet được áp dụng trên ranh giới trong và ngoài của stator và rotor trong cả hai phương pháp.
 
 Mật độ lưới của cả hai phương pháp cũng được tinh chỉnh để đạt độ chính xác cao nhất. Đối với 3D-MRN, tại các khu vực xuất hiện biến dạng hình học đáng kể do quá trình rời rạc hóa, mật độ nút lưới được tăng cường nhằm mô tả trung thực sự phân bố từ trường. Trong khi đó, các khu vực tương ứng trong mô hình FEM được kiểm soát thông qua việc thiết lập kích thước phần tử tối đa (maximum element size). Đặc biệt, số lượng lớp phần tử trong miền khe hở không khí của cả hai mô hình được cài đặt không ít hơn 4 lớp nhằm đảm bảo tính chính xác khi trích xuất các thành phần mật độ từ thông phục vụ tính toán ứng suất Maxwell.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{figure/mesh.png}
+    \caption{Miền tính toán rút gọn và cấu hình lưới trên FEM và 3D-MRN}
+    \label{fig4}
+\end{figure}
 
 Ngoài ra, các cấu hình lưới sử dụng trong nghiên cứu này đều đã trải qua quá trình kiểm tra tính hội tụ để đảm bảo sự cân bằng giữa độ chính xác và chi phí tính toán. Các kết quả trình bày dưới đây được thực hiện với mật độ lưới đã đạt tới ngưỡng hội tụ, nghĩa là kể từ mật độ lưới này trở đi, nếu tiếp tục tinh chỉnh lưới dày hơn thì sai số của kết quả tính toán không vượt quá 2\%.
 

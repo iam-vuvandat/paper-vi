@@ -53,4 +53,87 @@ Trong đó, $Q$ là số rãnh stator và $2p$ là số cực từ. Do mô hình
 \end{equation}
 Việc lựa chọn $n=30$ bước tính cho một chu kỳ $\theta_{cog}$ đảm bảo độ phân giải đủ cao để quan sát các đỉnh dao động của mô-men điện từ và đánh giá sai số giữa mô hình mạng điện trở từ và phương pháp phần tử hữu hạn.
 
-\subsection{Verification}
+\subsection{No Load Verification}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{figure/bmap_no_load.png}
+    \caption{Comparison of magnetic flux density distributions between FEM and the proposed 3D-MBGRN solver: (a) 3D isometric view, (b) cross-sectional view at the mid-airgap plane with the highlighted airgap probing path, and (c) bottom surface view.}
+    \label{bmap_no_load}
+\end{figure}
+\subsection{Load Verification}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{figure/bmap.png}
+    \caption{Comparison of magnetic flux density distributions between FEM and the proposed 3D-MBGRN solver: (a) 3D isometric view, (b) cross-sectional view at the mid-airgap plane with the highlighted airgap probing path, and (c) bottom surface view.}
+    \label{bmap}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density.png}
+    \caption{Mật độ từ thông khe hở không khí}
+    \label{airgap_flux_density}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/hamonic_flux_linkage.png}
+    \caption{Tuwf thoong lieen kết harmonic}
+    \label{airgap}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/hamonic_flux_linkage.png}
+    \caption{Tuwf thoong lieen kết harmonic}
+    \label{flux_linkage_harmonic}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/back_emf.png}
+    \caption{Sức phản điện động}
+    \label{back_emf}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/harmonic_back_emf.png}
+    \caption{Sức phản điện động}
+    \label{back_emf_harmonic}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/torque.png}
+    \caption{Momen}
+    \label{torque}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/mechanical_power.png}
+    \caption{Công suất cơ}
+    \label{mechanical_power}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/cogging.png}
+    \caption{cogging}
+    \label{cogging}
+\end{figure}
+
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/axial_force.png}
+    \caption{Axial Force}
+    \label{axial_force}
+\end{figure}
+
+
+

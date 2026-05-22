@@ -54,12 +54,57 @@ Trong đó, $Q$ là số rãnh stator và $2p$ là số cực từ. Do mô hình
 Việc lựa chọn $n=30$ bước tính cho một chu kỳ $\theta_{cog}$ đảm bảo độ phân giải đủ cao để quan sát các đỉnh dao động của mô-men điện từ và đánh giá sai số giữa mô hình mạng điện trở từ và phương pháp phần tử hữu hạn.
 
 \subsection{No Load Verification}
+
+% Bmap
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.48\textwidth]{figure/bmap_no_load.png}
     \caption{Comparison of magnetic flux density distributions between FEM and the proposed 3D-MBGRN solver: (a) 3D isometric view, (b) cross-sectional view at the mid-airgap plane with the highlighted airgap probing path, and (c) bottom surface view.}
     \label{bmap_no_load}
 \end{figure}
+
+% Airgap flux density
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density_no_load.pdf}
+    \caption{Mật độ từ thông khe hở không khí}
+    \label{airgap_flux_density_no_load}
+\end{figure} 
+
+% Flux linkage 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/flux_linkage_no_load.pdf}
+    \caption{Flux Linkage}
+    \label{flux_linkage_no_load}
+\end{figure}
+
+% Back EMF 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/back_emf_no_load.pdf}
+    \caption{Back EMF}
+    \label{back_emf_no_load}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/cogging.pdf}
+    \caption{cogging}
+    \label{cogging_no_load}
+\end{figure}
+
+
+
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/axial_force_no_load.pdf}
+    \caption{Axial Force}
+    \label{axial_force_no_load}
+\end{figure}
+
+
+
 \subsection{Load Verification}
 
 \begin{figure}[htbp]
@@ -71,42 +116,32 @@ Việc lựa chọn $n=30$ bước tính cho một chu kỳ $\theta_{cog}$ đả
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density.png}
+    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density.pdf}
     \caption{Mật độ từ thông khe hở không khí}
     \label{airgap_flux_density}
+\end{figure} 
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/flux_linkage.pdf}
+    \caption{Flux Linkage}
+    \label{flux_linkage}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/hamonic_flux_linkage.png}
-    \caption{Tuwf thoong lieen kết harmonic}
-    \label{airgap}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{figure/hamonic_flux_linkage.png}
-    \caption{Tuwf thoong lieen kết harmonic}
-    \label{flux_linkage_harmonic}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{figure/back_emf.png}
+    \includegraphics[width=0.45\textwidth]{figure/back_emf.pdf}
     \caption{Sức phản điện động}
     \label{back_emf}
 \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{figure/harmonic_back_emf.png}
-    \caption{Sức phản điện động}
-    \label{back_emf_harmonic}
-\end{figure}
+
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/torque.png}
+    \includegraphics[width=0.45\textwidth]{figure/torque.pdf}
     \caption{Momen}
     \label{torque}
 \end{figure}

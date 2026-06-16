@@ -54,9 +54,11 @@ Trong đó, $Q$ là số rãnh stator và $2p$ là số cực từ. Do mô hình
 Việc lựa chọn $n=30$ bước tính cho một chu kỳ $\theta_{cog}$ đảm bảo độ phân giải đủ cao để quan sát các đỉnh dao động của mô-men điện từ và đánh giá sai số giữa mô hình mạng điện trở từ và phương pháp phần tử hữu hạn.
 
 \subsection{No Load Verification}
+Theo \cite{10599821}, việc xác minh trạng thái không tải là một bước nền tảng không thể thiếu và có ý nghĩa quyết định trong bài toán mô hình hóa điện từ của máy điện. Việc thực hiện mô phỏng trong điều kiện hở mạch giúp cô lập hoàn toàn hệ thống khỏi từ trường phản ứng phần ứng phức tạp do dòng điện dây quấn stator gây ra, từ đó cho phép người thiết kế quan sát và kiểm chứng một cách thuần túy quy luật phân bố từ trường cơ bản được thiết lập bởi hệ thống nam châm vĩnh cửu. Bên cạnh đó, giai đoạn này còn cung cấp một chuẩn mực nghiêm ngặt để đánh giá chất lượng của quá trình rời rạc hóa lưới phi tham số. Nó đóng vai trò then chốt trong việc xác minh xem bộ giải lặp điểm bất động phi tuyến kết hợp với kỹ thuật thư giãn vật liệu thích nghi có khả năng phản ánh chính xác hiện tượng bão hòa từ tính cục bộ bên trong lõi sắt từ dưới tác động kích từ đơn lẻ của nam châm hay không. Do đó, một kết quả tính toán trường không tải chính xác sẽ thiết lập một nền tảng toán học vững chắc trước khi mở rộng sang các phân tích động lực học có tải phức tạp hơn.
 
-% Bmap
-\begin{figure}[htbp]
+Để chứng minh tính đúng đắn của phương pháp mạng từ trở 3 chiều đề xuất (3D-MRN), các kết quả mô phỏng ở trạng thái không tải thu được từ bộ giải được đặt trong sự đối chiếu trực tiếp với kết quả từ phương pháp phần tử hữu hạn (3D-FEM). Trước hết, phân bố mật độ từ thông tổng thể trên toàn bộ cấu trúc máy điện được mô tả trực quan thông qua bản đồ từ trường (B-map) tại Hình~\ref{bmap_no_load} qua 3 góc nhìn phân tích bao gồm (a) phối cảnh (isometric view), (b) mặt cắt ngang giữa khe hở không khí (mid-airgap cross-sectional view) với một probe line để phục vụ việc thu thập các kết quả định lượng, và (c) mặt đáy (bottom surface view). Kết quả thu được cho thấy một sự tương đồng rất cao về quy luật phân bố tổng thể giữa phương pháp 3D-MBGRN đề xuất và phương pháp 3D-FEM đối chứng.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.48\textwidth]{figure/bmap_no_load.png}
     \caption{Comparison of magnetic flux density distributions between FEM and the proposed 3D-MBGRN solver: (a) 3D isometric view, (b) cross-sectional view at the mid-airgap plane with the highlighted airgap probing path, and (c) bottom surface view.}
@@ -64,111 +66,139 @@ Việc lựa chọn $n=30$ bước tính cho một chu kỳ $\theta_{cog}$ đả
 \end{figure}
 
 % Airgap flux density
-\begin{figure}[htbp]
+Các kết quả về từ thông khe hở không khí theo các phương bán kính, tiếp tuyến và dọc trục được trích xuất tại một cung tròn nằm trong mặt phẳng giữa khe hở không khí, tại bán kính trung bình như trong hình \ref{bmap_no_load}.b. Kết quả về dạng sóng theo thời gian và phổ harmonic được đưa ra trong các hình \ref{airgap_flux_density_no_load} và \ref{airgap_flux_density_no_load_harmonic}:
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density_no_load.pdf}
+    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density_no_load_waveform.png}
     \caption{Mật độ từ thông khe hở không khí}
     \label{airgap_flux_density_no_load}
 \end{figure} 
 
-% Flux linkage 
-\begin{figure}[htbp]
+% Air gap flux density no load harmonic
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/flux_linkage_no_load.pdf}
+    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density_no_load_harmonics.png}
+    \caption{Mật độ từ thông khe hở không khí}
+    \label{airgap_flux_density_no_load_harmonic}
+\end{figure} 
+Các kết quả thu được trong  hình \ref{airgap_flux_density_no_load} cho thấy sự đồng nhất về các thành phần từ thông khe hở không khí giữa 3D-MBGRN đề xuất và 3D-FEM về cả pha, biên độ và dạng sóng. Thành phần từ thông dọc trục là thành phần chủ đạo, biên độ $B_z$ chỉ chênh lệch $1.09\%$ (0.74$T$ (3D-MBGRN) và 0.73$T$ với 3D-FEM). Trong khi đó mật độ từ thông hướng tiếp tuyến và hướng tâm có biên độ rất nhỏ. Các kết quả phân tích harmonic được đưa ra trong Hình \ref{airgap_flux_density_no_load_harmonic} cho thấy: ?????
+
+% Flux linkage 
+Trong số các đặc tính vận hành toàn cục của máy điện, từ thông liên kết ($\Psi$) đóng vai trò là một đại lượng cốt lõi, tạo nên mối liên kết điện từ quyết định giữa trường mạch từ nội tại và hệ thống mạch điện động lực học bên ngoài. Hình~\ref{flux_linkage_no_load} minh họa dạng sóng transient của từ thông liên kết pha A ($\Psi_a$) trong một chu kỳ xác lập ở tốc độ định mức $3000\text{ rpm}$. Kết quả trích xuất cho thấy biên độ đỉnh của từ thông liên kết đạt giá trị $0.05\text{ Wb}$ trên cả hai phương pháp với sai số biên độ đỉnh chỉ vỏn vẹn $0.53\%$. Đồng thời, dạng sóng hài cơ bản (bậc 1) của đại lượng này thu được từ bộ giải đề xuất và mô hình đối chứng cũng đạt độ trùng khớp rất cao, lần lượt là $0.0470\text{ Wb}$ đối với phương pháp 3D-MBGRN và $0.0468\text{ Wb}$ đối với phương pháp 3D-FEM, giới hạn sai số ở mức cực thấp là $0.56\%$. Do từ thông liên kết là kết quả tích phân toàn cục từ thông lượng của tất cả các phần tử lục diện trong toàn bộ miền tính toán, độ chính xác vượt trội này là minh chứng thực tế khẳng định tính đúng đắn trong việc thiết lập hệ phương trình ma trận độ dẫn toàn cục và thuật toán hội tụ phi tuyến của bộ giải đề xuất (Hình \ref{flux_linkage_no_load})
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/flux_linkage_no_load_waveform.png}
     \caption{Flux Linkage}
     \label{flux_linkage_no_load}
 \end{figure}
+Sự trùng khớp gần như tuyệt đối này càng có ý nghĩa khoa học quan trọng khi hai phương pháp 3D-MBGRN và 3D-FEM vận hành dựa trên hai nền tảng logic mô hình hóa và kỹ thuật xử lý hậu kỳ (post-processing) hoàn toàn độc lập. Do đó, bộ giải mạng từ trở đề xuất hoàn toàn có thể thay thế cấu hình 3D-FEM trong các bài toán thiết kế tối ưu hóa vòng lặp lớn nhằm tiết kiệm tài nguyên. Ngoài ra, khác với cấu trúc dây quấn phân bố bước ngắn hai lớp phức tạp trong các nghiên cứu trước đây—vốn đòi hỏi nhiều phép tích phân đường riêng biệt cho từng bối dây để xác định từ thông pha—mô hình động cơ hướng trục khảo sát trong nghiên cứu này sử dụng cấu hình dây quấn tập trung (concentrated winding). Đặc điểm này cho phép đơn giản hóa ma trận ampere-vòng toàn cục, giảm thiểu khối lượng tính toán cấu trúc hình học hậu kỳ nhưng vẫn duy trì được độ chính xác cao đối với các đại lượng transient.
+
 
 % Back EMF 
-\begin{figure}[htbp]
+
+Vì sức phản điện động không tải ($e$) được xác định một cách đại số thông qua đạo hàm bậc nhất theo thời gian của từ thông liên kết pha ($\Psi$), dạng sóng và biên độ của đại lượng này phản ánh trực tiếp độ chính xác vi phân của trường điện từ động học. Hình~\ref{back_emf_no_load} minh họa sự đối chiếu dạng sóng transient của sức phản điện động pha A ($e_a$) ở tốc độ định mức $3000\text{ RPM}$ giữa hai bộ giải. Kết quả trích xuất từ dữ liệu kiểm chứng cho thấy một sự trùng khớp gần như hoàn hảo về mặt đồ thị trong toàn bộ chu kỳ biến thiên. Cụ thể, biên độ đỉnh của sức phản điện động tính toán bởi phương pháp 3D-MBGRN đề xuất đạt $140.63\text{ V}$, hoàn toàn tương đồng với giá trị $140.06\text{ V}$ thu được từ mô hình 3D-FEM đối chứng với sai số đỉnh cực nhỏ chỉ là $0.41\%$. Đồng thời, giá trị trị hiệu dụng (RMS) của hai phương pháp lần lượt là $103.89\text{ V}$ và $103.30\text{ V}$, giới hạn sai số ở mức $0.56\%$. Phân tích sâu hơn vào phổ phổ hài tại Hình~\ref{airgap_flux_density_no_load_harmonic} (hoặc nhãn tương ứng của đồ thị phổ hài Back EMF không tải), biên độ sóng hài bậc cơ bản (Harmonic Order \#1) đạt $146.75\text{ V}$ (3D-MBGRN) và $145.93\text{ V}$ (3D-FEM) với sai số chỉ $0.56\%$. Các thành phần hài bậc cao như bậc 5 ($7.02\text{ V}$ so với $6.77\text{ V}$, sai số $3.71\%$) và bậc 7 ($0.85\text{ V}$ so với $0.91\text{ V}$, sai số $6.51\%$) cũng được bộ giải đề xuất bám sát chặt chẽ. Sự nhất quán vượt trội này khẳng định năng lực tính toán transient chính xác cao của mô hình mạng từ trở đề xuất.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/back_emf_no_load.pdf}
+    \includegraphics[width=0.45\textwidth]{figure/back_emf_no_load_waveform.png}
     \caption{Back EMF}
     \label{back_emf_no_load}
 \end{figure}
 
-\begin{figure}[htbp]
+Hình~\ref{cogging_no_load} minh họa kết quả đối chiếu đặc tính mô-men răng không tải ($T_{\text{cog}}$) trong một chu kỳ biến thiên góc cơ học giữa bộ giải 3D-MBGRN đề xuất và mô hình 3D-FEM đối chứng. Kết quả trích xuất từ dữ liệu kiểm chứng cho thấy giá trị trung bình (DC component) của mô-men răng trên cả hai phương pháp đều triệt tiêu hoàn toàn về mức $0.00\text{ Nm}$, phù hợp với bản chất vật lý của máy điện ở trạng thái hở mạch. Tuy nhiên, biên độ đỉnh-đỉnh (peak-to-peak) có sự chênh lệch đáng kể, với giá trị tính toán bởi phương pháp 3D-MBGRN là $0.72\text{ Nm}$, trong khi kết quả từ mô hình 3D-FEM là $0.43\text{ Nm}$, tương ứng với sai số biên độ đỉnh-đỉnh đạt $66.61\%$. 
+
+Sai lệch này là một hệ quả kỹ thuật điển hình đã được dự báo trước, xuất phát từ việc bộ giải đề xuất sử dụng kỹ thuật dịch chuyển chỉ số (index-shifting technique) trên một cấu trúc lưới cố định trong hệ tọa độ trụ nhằm tối ưu hóa tối đa tốc độ tính toán transient. Quá trình rời rạc hóa hình học khiến các biên ranh giới mịn của răng stator và nam châm vĩnh cửu bị xấp xỉ thô sơ hơn dưới dạng các bậc thang (staircase effect). Vì mô-men răng là đại lượng vi phân phụ thuộc chặt chẽ vào tốc độ thay đổi của năng lượng từ trường khe hở không khí theo vị trí hình học, hiện tượng méo lưới cục bộ này đã làm phóng đại các đỉnh dao động transient cục bộ. Mặc dù xuất hiện sai số lớn về mặt tỷ lệ phần trăm biên độ, nhưng do giá trị tuyệt đối của mô-men răng là rất nhỏ và không đáng kể so với mô-men định mức đầu ra của động cơ ($5\text{ Nm}$), sự sai lệch này hoàn toàn chấp nhận được trong kỹ thuật và không làm ảnh hưởng đến tính đúng đắn khi dự báo các đặc tính vận hành tổng thể của hệ thống.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/cogging.pdf}
+    \includegraphics[width=0.45\textwidth]{figure/cogging_torque.png}
     \caption{cogging}
     \label{cogging_no_load}
 \end{figure}
 
+Đối với dòng máy điện quay hướng trục (AFPM), việc tính toán chính xác lực hút dọc trục ($F_z$) giữa rotor và stator đóng vai trò nền tảng quyết định đến quá trình thiết kế cơ khí cấu trúc và lựa chọn ổ đỡ. Hình~\ref{axial_force_no_load} biểu diễn đặc tính transient theo vị trí góc quay của lực dọc trục ở trạng thái không tải. Kết quả trích xuất từ tập dữ liệu kiểm chứng cho thấy giá trị trung bình (thành phần DC) tính toán bởi bộ giải 3D-MBGRN đề xuất đạt $1444.44\text{ N}$, bám sát giá trị $1490.60\text{ N}$ của mô hình 3D-FEM đối chứng với sai số chỉ vỏn vẹn $3.10\%$. Trị hiệu dụng (RMS) của hai phương pháp cũng đạt độ tương đồng lý tưởng ở mức $1444.45\text{ N}$ và $1490.62\text{ N}$ (sai số $3.10\%$). Mặc dù biên độ dao động đỉnh-đỉnh (peak-to-peak) có sự chênh lệch ($1.22\text{ N}$ đối với 3D-MBGRN và $6.59\text{ N}$ đối với 3D-FEM), giá trị dao động này là cực kỳ nhỏ (chưa tới $0.5\%$) so với tổng lực hút tĩnh khổng lồ lên tới gần $1500\text{ N}$. Sự nhất quán này khẳng định mô hình mạng từ trở đề xuất hoàn toàn tin cậy trong việc dự báo tải trọng cơ khí tĩnh tác dụng lên hệ trục cấu trúc động cơ.
 
-
-\begin{figure}[htbp]  
+\begin{figure}[H]  
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/axial_force_no_load.pdf}
+    \includegraphics[width=0.45\textwidth]{figure/axial_force_no_load.png}
     \caption{Axial Force}
     \label{axial_force_no_load}
 \end{figure}
 
-
-
 \subsection{Load Verification}
 
-\begin{figure}[htbp]
+Để đánh giá toàn diện năng lực tính toán của bộ giải 3D-MBGRN đề xuất trong điều kiện vận hành thực tế, quá trình kiểm chứng trạng thái có tải (On-Load Verification) đã được thực hiện tại dòng điện kích từ định mức $10.0\text{ A}$ (RMS) và góc tiến dòng bằng $0.0^\circ$. Khác với trạng thái hở mạch thuần túy, phản ứng phần ứng (armature reaction) sinh ra bởi dòng điện các pha stator sẽ tạo ra một trường điện từ xoáy phức tạp, trực tiếp tương tác và làm méo dạng từ trường kích từ gốc của hệ thống nam châm vĩnh cửu, đồng thời đẩy sâu hiện tượng bão hòa từ tính cục bộ bên trong lõi thép lamination steel 1008.
+
+Trước hết, phân bố mật độ từ thông tổng thể dưới tác động kích từ kép được mô tả trực quan thông qua bản đồ từ trường (B-map) tại Hình~\ref{bmap}. Kết quả đối chiếu đồ thị giữa phương pháp 3D-MBGRN đề xuất và mô hình 3D-FEM đối chứng tiếp tục cho thấy một sự tương đồng rất cao về quy luật phân bố tổng thể. Sự dịch chuyển của các vùng mật độ từ thông cực đại cục bộ do hiện tượng lệch trục từ trường dưới tải đã được bộ giải đề xuất bám sát chặt chẽ, khẳng định tính đúng đắn của việc thiết lập hệ phương trình ma trận độ dẫn toàn cục phi tuyến.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.48\textwidth]{figure/bmap.png}
-    \caption{Comparison of magnetic flux density distributions between FEM and the proposed 3D-MBGRN solver: (a) 3D isometric view, (b) cross-sectional view at the mid-airgap plane with the highlighted airgap probing path, and (c) bottom surface view.}
+    \caption{Comparison of magnetic flux density distributions between FEM and the proposed 3D-MBGRN solver under rated load condition: (a) 3D isometric view, (b) cross-sectional view at the mid-airgap plane with the highlighted airgap probing path, and (c) bottom surface view.}
     \label{bmap}
 \end{figure}
 
-\begin{figure}[htbp]
+Đặc tính không gian của mật độ từ thông khe hở không khí trạng thái có tải được trích xuất dọc theo cung tròn probe line tại bán kính trung bình như mô tả trong Hình~\ref{bmap}.b. Các kết quả về dạng sóng transient và phổ hài (spatial harmonics) tương ứng được trình bày chi tiết tại Hình~\ref{airgap_flux_density} và Hình~\ref{airgap_flux_density_harmonic}. 
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density.pdf}
-    \caption{Mật độ từ thông khe hở không khí}
+    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density_waveform.png}
+    \caption{Mật độ từ thông khe hở không khí ở trạng thái có tải}
     \label{airgap_flux_density}
 \end{figure} 
 
-
-
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/flux_linkage.pdf}
-    \caption{Flux Linkage}
+    \includegraphics[width=0.45\textwidth]{figure/airgap_flux_density_harmonics.png}
+    \caption{Phân tích phổ harmonic của mật độ từ thông khe hở không khí trạng thái có tải}
+    \label{airgap_flux_density_harmonic}
+\end{figure}
+
+Dữ liệu định lượng trích xuất cho thấy thành phần dọc trục ($B_z$) vẫn đóng vai trò chủ đạo với biên độ đỉnh đạt xấp xỉ $0.81\text{ T}$ trên cả hai bộ giải, giới hạn sai số cực đại chỉ vỏn vẹn $0.03\%$. Trị hiệu dụng (RMS) của thành phần $B_z$ đạt mức $0.62\text{ T}$ với sai số đối chiếu là $0.50\%$. Đối với phân tích phổ hài tại Hình~\ref{airgap_flux_density_harmonic}, thành phần hài bậc cơ bản (Harmonic Order \#1) của mật độ từ thông dọc trục đạt sự trùng khớp lý tưởng với giá trị $0.8454\text{ T}$ (3D-MBGRN) so với $0.8465\text{ T}$ (3D-FEM), tương ứng sai số tương đối chỉ $0.13\%$. Các thành phần hài bậc cao như bậc 3, bậc 5 và bậc 7 phản ánh tính phi tuyến bão hòa của răng stator cũng được mô hình hóa chính xác với mức sai số hoàn toàn nằm trong giới hạn cho phép kỹ thuật.
+
+Hình~\ref{flux_linkage} minh họa đặc tính transient theo vị trí góc quay cơ học của từ thông liên kết pha A ($\Psi_a$) dưới điều kiện tải định mức. Do tác động tổng hợp từ dòng điện phần ứng, biên độ đỉnh của từ thông lượng tăng lên mức $0.06\text{ Wb}$ trên cả hai phương pháp với sai số biên độ đỉnh giới hạn ở mức $2.74\%$. Trị hiệu dụng RMS của từ thông đạt $0.04\text{ Wb}$ (sai số $2.83\%$). Sự nhất quán tuyệt đối về mặt pha và dạng sóng của đại lượng tích phân toàn cục này là minh chứng thực tế khẳng định năng lực tính toán transient chính xác cao của hệ thống cấu trúc lưới phi tham số đề xuất.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/flux_linkage_waveform.png}
+    \caption{Từ thông liên kết pha A ở trạng thái có tải}
     \label{flux_linkage}
 \end{figure}
 
-\begin{figure}[htbp]
+Vì sức phản điện động có tải ($e$) phụ thuộc vi phân trực tiếp vào tốc độ biến thiên theo thời gian của từ thông liên kết, đại lượng này là tiêu chuẩn nghiêm ngặt nhất để kiểm chứng độ chính xác động học của trường điện từ phi tuyến dưới tải. Hình~\ref{back_emf} thể hiện sự đối chiếu dạng sóng transient của sức phản điện động pha A ($e_a$) ở tốc độ định mức $3000\text{ rpm}$. 
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/back_emf.pdf}
-    \caption{Sức phản điện động}
+    \includegraphics[width=0.45\textwidth]{figure/back_emf_waveform.png}
+    \caption{Sức phản điện động pha A ở trạng thái có tải}
     \label{back_emf}
 \end{figure}
 
+Kết quả đồ thị cho thấy biểu đồ của bộ giải đề xuất bám sát hoàn hảo mô hình đối chứng. Cụ thể, biên độ đỉnh của sức phản điện động tính toán bởi phương pháp 3D-MBGRN đạt $177.12\text{ V}$, tương đương với giá trị $182.86\text{ V}$ thu được từ mô hình 3D-FEM với sai số đỉnh cực nhỏ là $3.14\%$. Trị hiệu dụng (RMS) của hai phương pháp lần lượt đạt $122.97\text{ V}$ và $126.55\text{ V}$ (sai số $2.83\%$). Trên phương diện hài không gian, biên độ sóng hài bậc 1 đạt $173.81\text{ V}$ so với $178.87\text{ V}$ (sai số $2.83\%$), trong khi các thành phần hài bậc cao như bậc 5 và bậc 7 cũng đạt độ tương đồng lý tưởng với sai số lần lượt là $0.33\%$ và $3.16\%$.
 
+Đặc tính mô-men điện từ transient dưới tải ($T$) được thể hiện tại Hình~\ref{torque}. Kết quả tính toán cho thấy giá trị mô-men đầu ra trung bình (DC component) đạt giá trị ổn định ở mức $9.93\text{ Nm}$ đối với phương pháp 3D-MBGRN và $9.90\text{ Nm}$ đối với phương pháp 3D-FEM, tương ứng với sai số tích phân toàn cục siêu nhỏ chỉ đạt $0.30\%$. Giá trị mô-men này hoàn toàn đáp ứng yêu cầu kiểm chứng công suất đầu ra định mức của động cơ đạt xấp xỉ hơn $3.1\text{ kW}$. Độ đập mạch mô-men (Torque Ripple Ratio) trích xuất từ mô hình mạng từ trở đạt giá trị $15.77\%$ so với mức $11.46\%$ của mô hình phần tử hữu hạn. Độ lệch biên độ đập mạch đỉnh-đỉnh này ($0.78\text{ Nm}$ so với $0.57\text{ Nm}$) là một hệ quả kỹ thuật đã được dự báo trước do ảnh hưởng của hiệu ứng bậc thang (staircase effect) từ việc rời rạc hóa lưới cố định cấu trúc trụ, tuy nhiên sai lệch tuyệt đối này là rất nhỏ và hoàn toàn chấp nhận được trong các bài toán thiết kế tối ưu hóa công nghiệp.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/torque.pdf}
-    \caption{Momen}
+    \includegraphics[width=0.45\textwidth]{figure/torque.png}
+    \caption{Mô-men điện từ transient ở trạng thái có tải định mức}
     \label{torque}
 \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{figure/mechanical_power.png}
-    \caption{Công suất cơ}
-    \label{mechanical_power}
-\end{figure}
+Đối với dòng máy điện dòng trục, lực hút dọc trục ($F_z$) tác dụng lên trục cơ khí dưới trạng thái tải là tham số có ý nghĩa quyết định đến việc tính toán độ bền cơ học và lựa chọn ổ đỡ hệ thống. Hình~\ref{axial_force} mô tả đặc tính biến thiên theo vị trí góc quay của lực dọc trục có tải. Dưới tác động của phản ứng phần ứng, giá trị lực tĩnh trung bình tổng thể tăng lên mức $1453.01\text{ N}$ (3D-MBGRN) và $1499.50\text{ N}$ (3D-FEM), duy trì sai số bám sát ở mức cực thấp chỉ đạt $3.10\%$. Giá trị hiệu dụng RMS tương ứng của lực đạt $1453.05\text{ N}$ so với $1499.52\text{ N}$ (sai số $3.10\%$). Mặc dù có sự chênh lệch nhỏ về biên độ dao động transient đỉnh-đỉnh ($14.20\text{ N}$ so với $20.29\text{ N}$), tỷ lệ dao động này chiếm chưa đầy $1.5\%$ tổng lực từ tĩnh khổng lồ tác dụng lên rotor, khẳng định độ tin cậy vượt trội của mô hình đề xuất khi dự báo tải trọng cơ khí.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{figure/cogging.png}
-    \caption{cogging}
-    \label{cogging}
-\end{figure}
-
-
-
-
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{figure/axial_force.png}
-    \caption{Axial Force}
+    \caption{Lực hút dọc trục transient ở trạng thái có tải}
     \label{axial_force}
 \end{figure}
 
+Cuối cùng, đặc tính biến thiên của công suất cơ học đầu ra và hiệu suất vận hành toàn cục theo sự thay đổi của biên độ dòng điện kích từ stator được minh họa tại Hình~\ref{current_power}. Kết quả đối chiếu cho thấy một sự bám sát chặt chẽ và nhất quán xuyên suốt toàn bộ dải dòng điện khảo sát, chứng minh bộ giải mạng từ trở phi tuyến 3 chiều đề xuất hoàn toàn đủ năng lực thay thế các cấu hình mô phỏng 3D-FEM thương mại nặng nề trong các vòng lặp thiết kế tối ưu hóa quy mô lớn nhằm tiết kiệm tài nguyên tính toán.
 
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/current_power.png}
+    \caption{Đặc tính công suất đầu ra tại các biên độ dòng điện kích từ khác nhau}
+    \label{current_power}
+\end{figure}

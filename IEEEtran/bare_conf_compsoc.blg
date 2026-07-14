@@ -1,0 +1,5 @@
+[0] Config.pm:328> INFO - This is Biber 2.21
+[5] Config.pm:331> INFO - Logfile is 'bare_conf_compsoc.blg'
+[300] biber-MSWIN64:342> INFO - === 
+[1285] Utils.pm:479> ERROR - Cannot find 'bare_conf_compsoc.bcf'!
+[1286] Biber.pm:137> INFO - ERRORS: 1

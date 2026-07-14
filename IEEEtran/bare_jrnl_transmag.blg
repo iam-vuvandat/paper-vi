@@ -1,0 +1,5 @@
+[0] Config.pm:328> INFO - This is Biber 2.21
+[4] Config.pm:331> INFO - Logfile is 'bare_jrnl_transmag.blg'
+[251] biber-MSWIN64:342> INFO - === 
+[935] Utils.pm:479> ERROR - Cannot find 'bare_jrnl_transmag.bcf'!
+[935] Biber.pm:137> INFO - ERRORS: 1

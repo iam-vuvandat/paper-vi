@@ -1,13 +1,13 @@
 \section{Thảo luận}
 \subsection{Hệ số thư giãn vật liệu và đặc tính của thuật toán giải lặp}
 
-Động học hội tụ của bộ giải lặp mạng điện trở từ tổng quát dựa trên lưới 3D (MBGRN) dưới các chiến lược thư giãn vật liệu khác nhau được đánh giá một cách toàn diện từ Hình \ref{material_relax_1} đến Hình \ref{material_relax_4}. Các kết quả này vạch trần một hiện tượng số trị cốt lõi trong mô phỏng điện từ phi tuyến: sự sai lệch hoàn toàn về bản chất giữa sự sụt giảm sai số dư đại số (Relative Residual) và độ chính xác vật lý thực tế của nghiệm (Global Relative Error).
+Tốc độ và xu hướng hội tụ của bộ giải lặp mạng từ trở sinh lưới 3D (3D-MBGRN) dưới các chiến lược thư giãn vật liệu khác nhau được đánh giá từ Hình \ref{material_relax_1} đến Hình \ref{material_relax_4}. Các kết quả này thể hiện một đặc tính số trị trong mô phỏng điện từ phi tuyến: sự khác biệt về tốc độ giảm giữa sai số dư đại số (Relative Residual) và độ chính xác vật lý của nghiệm thế vectơ từ (Global Relative Error).
 
-Hình \ref{material_relax_1} và \ref{material_relax_3} minh họa hành vi của bộ giải khi sử dụng các hệ số thư giãn cố định truyền thống ($\beta = 1.00$). Như thể hiện trong Hình \ref{material_relax_1}, việc lựa chọn một hệ số dưới thư giãn quá an toàn và thận trọng ($\alpha = 0.01$) buộc sai số dư tương đối sụt giảm với tốc độ cực kỳ chậm, đòi hỏi gần 90 vòng lặp mới chạm được vào ngưỡng hội tụ tiêu chuẩn $10^{-4}$. Quan trọng hơn, Hình \ref{material_relax_3} đã bóc trần sự nguy hiểm của phương pháp này; mặc dù thỏa mãn điều kiện ngắt đại số bề nổi, sai số tương đối toàn cục của nó vẫn kẹt cứng ở mức rất cao ($10^{-2}$). Hiện tượng giả hội tụ hoặc "bẫy trì trệ" này xảy ra do các bước cập nhật vi mô của độ từ thẩm vật liệu đã bị khóa cứng, che lấp đi các sai số mô hình hóa phi tuyến nghiêm trọng cục bộ. Ngược lại, các hệ số cố định lớn hơn như $\alpha = 0.3$ và $\alpha = 0.5$ cho phép tốc độ lao dốc ban đầu rất nhanh, nhưng cuối cùng lại dẫn đến trạng thái bão hòa sai số quanh mốc $3 \times 10^{-5}$. Tại đây, bộ giải rơi vào một chu kỳ dao động vô hạn (limit-cycle) do bước nhảy bị quá đà (overshooting) liên tục qua lại quanh vùng bão hòa sâu của đường cong $B-H$. Lựa chọn cực đoan với $\alpha = 1.00$ sẽ kích hoạt sự phân kỳ vĩnh viễn với các dao động số trị nghiêm trọng.
+Hình \ref{material_relax_1} và \ref{material_relax_3} biểu diễn diễn biến hội tụ của bộ giải khi áp dụng các hệ số thư giãn cố định ($\beta = 1.00$). Như thể hiện trong Hình \ref{material_relax_1}, việc lựa chọn một hệ số dưới thư giãn thấp ($\alpha = 0.01$) làm cho sai số dư tương đối giảm chậm, đòi hỏi gần 90 vòng lặp mới đạt ngưỡng hội tụ $10^{-4}$. Tuy nhiên, kết quả tại Hình \ref{material_relax_3} cho thấy mặc dù thỏa mãn tiêu chuẩn ngắt đại số, sai số tương đối toàn cục vẫn duy trì ở mức khoảng $10^{-2}$. Hiện tượng này cho thấy việc sử dụng các hệ số thư giãn quá nhỏ có thể khiến bộ giải rơi vào trạng thái trì trệ hội tụ—một hiện tượng số trị chưa được phân tích đầy đủ trong các nghiên cứu trước đây vốn chủ yếu tập trung vào điều kiện ngắt sai số dư. Nguyên nhân do bước cập nhật độ từ thẩm vật liệu bị giới hạn nhỏ, che lấp đi sai số phi tuyến chưa hội tụ hoàn toàn. Ngược lại, các hệ số thư giãn lớn hơn như $\alpha = 0.3$ và $\alpha = 0.5$ giúp sai số giảm nhanh ở các bước đầu, nhưng sau đó xuất hiện trạng thái bão hòa dao động quanh mức $3 \times 10^{-5}$ do bước nhảy lớn qua lại vùng bão hòa sâu của đường cong $B-H$. Lựa chọn $\alpha = 1.00$ dẫn đến hiện tượng phân kỳ do dao động số trị.
 
-Giới hạn căn bản này của các bộ giải tham số cố định đã được giải quyết triệt để bởi đề xuất về thuật toán suy giảm thích nghi hệ số thư giãn ($\beta = 0.50$), như được chứng minh trong Hình \ref{material_relax_2} và \ref{material_relax_4}. Bằng cách giám sát liên tục tốc độ sụt giảm sai số dư, thuật toán sẽ tự động điều tiết hạ bậc hệ số thư giãn và áp dụng cơ chế quay lui nghiệm (rollback) ngay khi phát hiện trạng thái trì trệ hoặc dao động số trị.
+Nhược điểm này của các bộ giải tham số cố định được khắc phục khi áp dụng thuật toán suy giảm thích nghi hệ số thư giãn ($\beta = 0.50$), như trình bày trong Hình \ref{material_relax_2} và \ref{material_relax_4}. Thông qua việc giám sát tốc độ giảm của sai số dư, thuật toán tự động điều chỉnh giảm hệ số thư giãn và kích hoạt cơ chế quay lui nghiệm (rollback) khi xuất hiện trạng thái dao động hoặc trì trệ.
 
-Khung giải thuật thích nghi thiết lập nên một cấu trúc phân bậc hội tụ rất rõ ràng và đơn điệu, tương quan trực tiếp với giá trị khởi tạo của $\alpha$. Trong khi các tuyến kịch bản nhỏ ($\alpha = 0.01$) được chủ động ngắt sớm để tiết kiệm tài nguyên, các tuyến kịch bản trung bình và lớn ($\alpha = 0.3, 0.5, 1.0$) tạo thành một phễu hội tụ cực kỳ sắc nét. Đáng chú ý nhất, tuyến kịch bản vốn phân kỳ dữ dội ban đầu ($\alpha = 1.00, \beta = 0.50$) đã bị thuần hóa hoàn toàn và trở thành quỹ đạo tối ưu nhất toàn bài toán: xuyên thủng ngưỡng $10^{-4}$ và đạt độ sai số tương đối toàn cục sâu dưới mức $10^{-5}$ chỉ trong vòng đúng 11 bước lặp. Điều này thể hiện sự cắt giảm khổng lồ về mặt thời gian tính toán so với 100 bước lặp vô vọng của trường hợp hệ số cố định tương ứng. Các kết quả đạt được khẳng định chắc chắn rằng: việc thiết lập một bước nhảy lớn ban đầu ($\alpha = 1.00$) kết hợp với "phanh hãm tự động" thích nghi Decay chính là chiến lược số trị tối ưu nhất để xử lý các bài toán bão hòa từ trường sâu trong cấu trúc động cơ phi tuyến 3D phức tạp.
+Khung giải thuật thích nghi tạo ra quá trình hội tụ đơn điệu tương ứng với các giá trị khởi tạo của $\alpha$. Trong khi trường hợp $\alpha = 0.01$ được chủ động ngắt sớm để tiết kiệm thời gian tính toán, các trường hợp $\alpha = 0.3, 0.5, 1.0$ tạo thành phễu hội tụ rõ rệt. Đáng chú ý, kịch bản khởi tạo $\alpha = 1.00$ ($\beta = 0.50$) đạt độ hội tụ tốt hơn: vượt ngưỡng $10^{-4}$ và đạt sai số tương đối toàn cục dưới $10^{-5}$ sau 11 bước lặp. Điều này thể hiện sự giảm đáng kể số vòng lặp so với trường hợp hệ số cố định tương ứng. Các kết quả đạt được cho thấy việc thiết lập bước nhảy ban đầu $\alpha = 1.00$ kết hợp với cơ chế điều chỉnh thích nghi Decay là một giải pháp số trị phù hợp để xử lý các bài toán bão hòa từ trường phi tuyến trong cấu trúc động cơ 3D.
 
 \begin{figure}[H]
     \centering
@@ -37,40 +37,147 @@ Khung giải thuật thích nghi thiết lập nên một cấu trúc phân bậ
     \label{material_relax_4}
 \end{figure}
 
+\subsection{Phân tích hội tụ lưới và đánh giá tính toán}
 
+\subsubsection{Cấu hình mô phỏng và các cấp độ chia lưới}
 
+Trong phần này, quá trình khảo sát hội tụ lưới được thực hiện dựa trên mô hình động cơ nam châm vĩnh cửu hướng trục (AFPM) 30 rãnh / 20 cực đã giới thiệu ở phần trước. Tất cả các khảo sát mô phỏng đánh giá lưới đều được tiến hành thống nhất ở trạng thái làm việc có tải định mức với dòng điện kích từ $10.0\text{ A}$ (RMS), tốc độ quay $3000\text{ rpm}$ và công suất đầu ra định mức $3\text{ kW}$.
 
-\subsection{Phân tích ảnh hưởng của mật độ lưới và đánh giá chi phí tính toán}
+Toàn bộ quá trình tính toán mô phỏng cho cả hai phương pháp 3D-FEM và 3D-MBGRN đề xuất được thực thi đồng nhất trên cùng một cấu hình máy tính cá nhân trang bị vi xử lý \textbf{Intel Core i7-7660U CPU @ 2.50 GHz} (4 CPUs), \textbf{8 GB RAM}, chạy hệ điều hành \textbf{Windows 10 Pro 64-bit}. Mô hình 3D-FEM đối chứng được giải bằng phần mềm thương mại \textbf{Ansys Maxwell 3D}, trong khi bộ giải 3D-MBGRN đề xuất được lập trình hoàn toàn trên nền tảng \textbf{Python 3.11}.
 
-Trong các phương pháp mô phỏng số điện từ, việc xác định tính độc lập của nghiệm đối với mật độ rời rạc hóa không gian (lưới) là một điều kiện tiên quyết bắt buộc nhằm đảm bảo tính đúng đắn về mặt vật lý và sự hội tụ số trị. Đối với phương pháp mạng từ trở lưới phi tham số trong không gian 3 chiều (3D-MRN) được đề xuất, việc khảo sát tính độc lập của lưới mang ý nghĩa cốt lõi kép. 
-
-Thứ nhất, do các biên hình học cong phức tạp của răng stator và nam châm vĩnh cửu được xấp xỉ cấu trúc thông qua hệ tọa độ trụ cố định, một sai số hình học không mong muốn gọi là hiệu ứng bậc thang (\textit{staircase effect}) sẽ vô tình được tích hợp vào mô hình. Do đó, việc định lượng khả năng triệt tiêu sự méo dạng hình học này khi tăng độ phân giải không gian là vô cùng quan trọng đối với các đại lượng vi phân cục bộ. 
-
-Thứ hai, một ưu thế căn bản của mô hình 3D-MRN so với phương pháp Phần tử hữu hạn 3 chiều truyền thống (3D-FEM) chính là tốc độ tính toán vượt trội. Vì vậy, việc phân tích kỹ lưỡng sự đánh đổi giữa mật độ lưới, độ chính xác của bộ giải và chi phí thời gian thực thi của CPU là chìa khóa để xác định ``điểm bão hòa kỹ thuật'' tối ưu phục vụ cho các vòng lặp thiết kế và tối ưu hóa đa mục tiêu quy mô lớn.
-
-Để đánh giá một cách toàn diện các tác động cấu trúc này, một quy trình kiểm tra tính độc lập của lưới đã được thực hiện hệ thống trên 6 cấu hình hình học từ thô đến mịn đối với bộ giải đề xuất, đặt trong sự đối chiếu nghiêm ngặt với mô hình mã nguồn 3D-FEM trong phần mềm Ansys Maxwell. Đối với bộ giải 3D-MRN, 3 trong số các cấu hình được chọn trùng khớp trực tiếp với các mô hình trực quan hóa lưới trong Hình 4 bao gồm: Lưới 2 (Thô: $7 \times 60 \times 13$, 5.460 phần tử), Lưới 4 (Trung bình: $12 \times 120 \times 17$, 24.480 phần tử), và Lưới 6 (Mịn: $18 \times 240 \times 23$, 99.360 phần tử). Ba cấu hình lưới trung gian và biên còn lại (Lưới 1, Lưới 3, và Lưới 5) được thiết lập bổ sung nhằm xây dựng một quỹ đạo tiến hóa hội tụ mượt mà và liên tục. 
-
-Đồng thời, mô hình đối chứng Ansys Maxwell cũng trải qua quá trình lặp lướt thích nghi tự động (\textit{adaptive meshing process}), xác định cấu hình lưới chuẩn (\textit{benchmark}) đạt xấp xỉ $\sim 350.000$ phần tử lục diện bậc hai với ngưỡng sai số năng lượng dưới $1,0\%$. Toàn bộ các chỉ số định lượng trích xuất từ quá trình phân tích độ nhạy của lưới dưới trạng thái có tải định mức được tổng hợp chi tiết trong Bảng II.
+Để thực hiện khảo sát hội tụ, chín cấu hình lưới phân đĩa từ thô đến mịn (ký hiệu từ Mesh 1 đến Mesh 9) đã được xây dựng song song cho cả hai phương pháp. Thông số chi tiết về quy mô phân đĩa lưới và kích thước ma trận hệ thống (Bậc tự do - DoF) giữa hai phương pháp được tổng hợp chi tiết trong Table~\ref{tab:mesh_overhead_comparison}.
 
 \begin{table}[htbp]
-\caption{Đánh giá định lượng về sự hội tụ lưới và chi phí tính toán dưới trạng thái có tải định mức}
-\label{tab:mesh_convergence}
+\caption{Thông số phân đĩa lưới và kích thước ma trận của 3D-FEM và 3D-MBGRN trên 9 cấu hình lưới}
+\label{tab:mesh_overhead_comparison}
 \centering
-\begin{tabular}{cccccc}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{ccccc}
+\hline\hline
+\textbf{Mesh} & \multicolumn{2}{c}{\textbf{3D-FEM}} & \multicolumn{2}{c}{\textbf{3D-MBGRN}} \\
+\cline{2-3} \cline{4-5}
+\textbf{Index} & \textbf{Elements} & \textbf{DoF} & \textbf{Cells} & \textbf{DoF} \\
 \hline
-\textbf{Chỉ số lưới} & \textbf{\begin{tabular}[c]{@{}c@{}}Rời rạc hóa\\ ($m \times n \times p$)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Tổng số phần tử\\ ($q_E$)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Sai số đỉnh\\ $B_z$ (\%)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Sai số đập mạch\\ mô-men (\%)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Thời gian tính\\ 1 bước (s)\end{tabular}} \\ \hline
-Lưới 1               & $5 \times 40 \times 10$                                                                & 2.000                                                                      & 5,84                                                                      & 84.32                                                                        & 0,05                                                                        \\
-Lưới 2 (Hình 4)      & $7 \times 60 \times 13$                                                                & 5.460                                                                      & 3,12                                                                      & 52,15                                                                        & 0,14                                                                        \\
-Lưới 3               & $10 \times 90 \times 15$                                                               & 13.500                                                                     & 1,45                                                                      & 33,78                                                                        & 0,42                                                                        \\
-Lưới 4 (Hình 4)      & $12 \times 120 \times 17$                                                              & 24.480                                                                     & 0,85                                                                      & 21,46                                                                        & 0,88                                                                        \\
-Lưới 5               & $15 \times 180 \times 20$                                                              & 54.000                                                                     & 0,22                                                                      & 10,12                                                                        & 2,15                                                                        \\
-Lưới 6 (Hình 4)      & $18 \times 240 \times 23$                                                              & 99.360                                                                     & 0,03                                                                      & 3,14                                                                         & 4,56                                                                        \\ \hline
-Ansys Maxwell        & Lưới thích nghi tự động                                                                & $\sim 350.000$                                                             & Chuẩn                                                                     & Chuẩn                                                                        & 184.20                                                                      \\ \hline
-\end{tabular}
+Mesh 1 & 39,798  & 54,649  & 9,900   & 9,899   \\
+Mesh 2 & 65,210  & 89,437  & 25,920  & 25,919  \\
+Mesh 3 & 92,435  & 126,473 & 49,500  & 49,499  \\
+Mesh 4 & 117,770 & 160,905 & 80,640  & 80,639  \\
+Mesh 5 & 180,645 & 246,525 & 119,340 & 119,339 \\
+Mesh 6 & 207,251 & 282,552 & 165,600 & 165,599 \\
+Mesh 7 & 283,146 & 385,525 & 219,420 & 219,419 \\
+Mesh 8 & 321,294 & 437,336 & 280,800 & 280,799 \\
+Mesh 9 & 359,012 & 488,176 & 349,740 & 349,739 \\
+\hline\hline
+\end{tabular}%
+}
 \end{table}
 
-Dựa trên các xu hướng số trị thu được từ Bảng II, các đại lượng tích phân toàn cục của trường điện từ như mật độ từ thông dọc trục ($B_z$) và từ thông liên kết pha cho thấy tính ổn định lý tưởng ngay cả ở các cấu hình lưới có mật độ rất thấp. Cụ thể, khi tịnh tiến mật độ từ cấu hình cực thô Lưới 1 lên cấu hình siêu mịn Lưới 6, sai số tương đối của đỉnh mật độ từ thông dọc trục chủ đạo giảm một cách tuần tự từ $5,84\%$ xuống ngưỡng tiệm cận không là $0,03\%$. Tính bền bỉ bẩm sinh này xuất phát từ bản chất toán học của các đại lượng tích phân, vốn là kết quả tổng hợp từ thế nút trên toàn miền tính toán, giúp tự động triệt tiêu các nhiễu loạn số trị rời rạc cục bộ.
 
-Ngược lại hoàn toàn, các đặc tính vi phân cục bộ mà tiêu biểu là mô-men răng (\textit{cogging torque}) và tỷ lệ đập mạch mô-men có tải phản ứng một cách cực kỳ nhạy cảm đối với độ phân giải của lưới. Tại các vùng lưới thô (Lưới 1 và Lưới 2), sự xấp xỉ thô sơ dạng bậc thang tại biên của răng stator và nam châm vĩnh cửu gây ra các xung nhiễu số học giả tạo trong biên độ từ trở khe hở không khí khi thực hiện phép dịch chỉ số để mô tả chuyển động quay. Sự méo dạng toán học này phóng đại đạo hàm chuyển vị của đồng năng lượng từ trường, dẫn đến sai số biên độ đập mạch lên tới $52,15\%$ đối với Lưới 2. Tuy nhiên, khi không gian tính toán được mở rộng làm mịn tới cấu hình Lưới 6, biên bậc thang tiệm cận sát về mặt phẳng continuum vật lý thực tế, triệt tiêu các dao động nhiễu và kéo giảm sai số mô-men đập mạch xuống mức biên kỹ thuật hoàn toàn chấp nhận được là $3,14\%$.
+\subsubsection{Đánh giá độ hội tụ lưới và chi phí tính toán}
+Để đánh giá định lượng tốc độ hội tụ và mức độ ổn định của kết quả tính toán khi mịn hóa lưới từ Mesh 1 đến Mesh 9, chỉ số Sai số Căn bậc hai Trung bình Chuẩn hóa (Normalized Root Mean Square Error - NRMSE) được sử dụng. Sai số NRMSE của một đại lượng transient $y$ tại cấu hình lưới thứ $m$ ($m \in \{1, 2, \dots, 8\}$) so với nghiệm chuẩn đối chứng ở cấu hình lưới mịn nhất (Mesh 9, $y_{ref}$) trong một chu kỳ mô phỏng $N$ bước thời gian được xác định bởi công thức toán học:
 
-Khi xét trên phương diện chi phí tài nguyên tính toán, số liệu thực nghiệm đã làm bật lên bước nhảy vọt khổng lồ về mặt hiệu năng của bộ giải 3D-MRN đề xuất. Mặc dù cấu hình lưới mịn nhất (Lưới 6) đòi hỏi thời gian thực thi là $4,56$ giây cho một bước transient do sự mở rộng kích thước ma trận nén nén dòng CSR (\textit{Compressed Sparse Row}), bộ giải này vẫn đạt tốc độ **nhanh hơn xấp xỉ 40 lần** so với mức thời gian khổng lồ $184,20$ giây của một bước Phần tử hữu hạn trên Ansys Maxwell. Sự thực thi siêu tốc này khi phối hợp cùng bộ giải lặp relaxation vật liệu thích nghi đã tạo nên một giải pháp dung hòa số trị hoàn hảo. Trong các bài toán thiết kế tối ưu hóa công nghiệp quy mô lớn, cấu hình Lưới 4 hoặc Lưới 5 chính là sự lựa chọn tối ưu, đảm bảo sai số dưới $1\%$ đối với các thông số từ thông cốt lõi trong khi hoàn thành chu kỳ đánh giá chỉ bằng một phần rất nhỏ thời gian của các gói phần mềm 3D-FEM thương mại.
+\begin{equation}
+\text{NRMSE}(m) = \frac{\sqrt{\frac{1}{N} \sum_{k=1}^{N} \left( y_m(t_k) - y_{ref}(t_k) \right)^2}}{\max(y_{ref}) - \min(y_{ref})} \times 100\%
+\end{equation}
+
+trong đó, $y_m(t_k)$ và $y_{ref}(t_k)$ lần lượt là giá trị tính toán của đại lượng quan tâm tại bước thời gian thứ $k$ tương ứng với cấu hình lưới thứ $m$ và cấu hình lưới đối chứng Mesh 9; $\max(y_{ref})$ và $\min(y_{ref})$ đại diện cho giá trị cực đại và cực tiểu của đại lượng đối chứng trong toàn bộ chu kỳ khảo sát.
+
+Sự hội tụ dạng sóng transient của các đại lượng điện từ cốt lõi (bao gồm mật độ từ thông khe hở $B_z$, từ thông liên kết $\Psi_a$, và mô-men $T$) tương ứng với các cấp độ lưới tiêu biểu được trình bày trong Fig.~\ref{fig:mbgrn_waveforms_convergence} cho bộ giải 3D-MBGRN đề xuất và Fig.~\ref{fig:fem_waveforms_convergence} cho mô hình 3D-FEM đối chứng. Đồng thời, diễn biến sai số NRMSE theo tổng số phần tử/ô lưới được biểu diễn định lượng trong Fig.~\ref{fig:self_convergence_nrmse}.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_mbgrn_airgap_flux_density_convergence.png}
+    \caption{Mật độ từ thông khe hở $B_z$}
+    \label{fig:mbgrn_bz_conv}
+\end{subfigure}
+\vskip 0.5em
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_mbgrn_flux_linkage_convergence.png}
+    \caption{Từ thông liên kết pha A $\Psi_a$}
+    \label{fig:mbgrn_flux_conv}
+\end{subfigure}
+\vskip 0.5em
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_mbgrn_torque_convergence.png}
+    \caption{Mô-men điện từ transient $T$}
+    \label{fig:mbgrn_torque_conv}
+\end{subfigure}
+\caption{Sự hội tụ dạng sóng transient của các đại lượng điện từ theo các cấp độ lưới trong bộ giải 3D-MBGRN đề xuất (Mesh 9 đối chứng được thể hiện bằng đường nét liền màu đen).}
+\label{fig:mbgrn_waveforms_convergence}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_fem_airgap_flux_density_bz_convergence.png}
+    \caption{Mật độ từ thông khe hở $B_z$}
+    \label{fig:fem_bz_conv}
+\end{subfigure}
+\vskip 0.5em
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_fem_flux_linkage_convergence.png}
+    \caption{Từ thông liên kết pha A $\Psi_a$}
+    \label{fig:fem_flux_conv}
+\end{subfigure}
+\vskip 0.5em
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_fem_torque_convergence.png}
+    \caption{Mô-men điện từ transient $T$}
+    \label{fig:fem_torque_conv}
+\end{subfigure}
+\caption{Sự hội tụ dạng sóng transient của các đại lượng điện từ theo các cấp độ lưới trong mô hình 3D-FEM đối chứng.}
+\label{fig:fem_waveforms_convergence}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_mbgrn_self_convergence.png}
+    \caption{Bộ giải 3D-MBGRN đề xuất}
+    \label{fig:mbgrn_nrmse_curve}
+\end{subfigure}
+\vskip 0.5em
+\begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figure/3d_fem_self_convergence.png}
+    \caption{Mô hình 3D-FEM đối chứng}
+    \label{fig:fem_nrmse_curve}
+\end{subfigure}
+\caption{Diễn biến sai số NRMSE đa tham số theo tổng số phần tử/ô lưới.}
+\label{fig:self_convergence_nrmse}
+\end{figure}
+
+Từ các kết quả đồ thị thu được, quá trình khảo sát ghi nhận những đặc tính hội tụ quan trọng đối với từng đại lượng khảo sát. Đối với mật độ từ thông khe hở ($B_z$), bộ giải 3D-MBGRN thể hiện sự hội tụ dạng sóng nhanh chóng với sai số NRMSE giảm từ $1.8\%$ ở Mesh 1 xuống dưới $0.5\%$ từ Mesh 3 trở đi, trong khi ở mô hình 3D-FEM, do ảnh hưởng của lưới tứ diện không đồng nhất tại ranh giới khe hở, dạng sóng $B_z$ xuất hiện sự dao động nhẹ ở các cấp lưới thô nhưng vẫn hội tụ về dưới $1.5\%$ từ Mesh 6. Đối với từ thông liên kết ($\Psi_a$), đại lượng này thể hiện tốc độ hội tụ ổn định trên cả hai phương pháp, ngay từ cấu hình thô Mesh 1, dạng sóng $\Psi_a$ đã bám sát nghiệm chuẩn Mesh 9 với sai số NRMSE duy trì ở mức thấp ($< 0.5\%$ đối với 3D-FEM và $< 0.8\%$ đối với 3D-MBGRN). Trong khi đó, mô-men điện từ ($T$) là đại lượng nhạy cảm nhất với độ phân giải không gian, ghi nhận sai số NRMSE ở các cấu hình lưới thô Mesh 1 -- Mesh 2 lên tới $25.6\%$ đối với 3D-MBGRN và $16.5\%$ đối với 3D-FEM; tuy nhiên khi tăng số lượng ô lưới lên mức trung bình (Mesh 3 -- Mesh 5), sai số NRMSE của mô-men trong 3D-MBGRN giảm xuống dưới $3.8\%$ và tiệm cận mức $< 1.8\%$ ở cấu hình Mesh 6.
+
+Để đánh giá định lượng tài nguyên số trị, Bảng~\ref{tab:computational_cost_comparison} tổng hợp chi tiết dung lượng bộ nhớ RAM tiêu tốn và thời gian thực thi transient giữa hai phương pháp trên toàn bộ 9 cấu hình lưới khảo sát.
+\begin{table}[htbp]
+\caption{Memory Usage and Execution Time Comparison Between 3D-MBGRN and 3D-FEM Across 9 Mesh Configurations}
+\label{tab:computational_cost_comparison}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{ccccc}
+\hline
+\textbf{Mesh} & \multicolumn{2}{c}{\textbf{RAM Usage (MB)}} & \multicolumn{2}{c}{\textbf{Execution Time (h)}} \\ \cline{2-5} 
+\textbf{Index} & \textbf{3D-MBGRN} & \textbf{3D-FEM} & \textbf{3D-MBGRN} & \textbf{3D-FEM} \\ \hline
+Mesh 1 & 561   & 900   & 0.01 & 0.2 \\
+Mesh 2 & 970   & 1,413 & 0.02 & 0.5 \\
+Mesh 3 & 1,659 & 1,996 & 0.05 & 0.7 \\
+Mesh 4 & 2,704 & 2,242 & 0.20 & 0.9 \\
+Mesh 5 & 4,007 & 3,563 & 0.20 & 1.9 \\
+Mesh 6 & 4,935 & 3,860 & 0.30 & 2.3 \\
+Mesh 7 & 4,444 & 5,140 & 0.80 & 2.9 \\
+Mesh 8 & 4,606 & 5,560 & 1.40 & 4.7 \\
+Mesh 9 & 4,856 & 6,594 & 1.40 & 5.4 \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+Tổng hợp giữa phân tích độ hội tụ tự thân NRMSE và chi phí tài nguyên tính toán từ Bảng~\ref{tab:computational_cost_comparison}, cấu hình Mesh 6 ($165.600$ ô lưới / $165.599$ DoF đối với 3D-MBGRN) đại diện cho cấp độ phân đĩa không gian đạt sự cân bằng tối ưu giữa độ chính xác và hiệu năng số trị. Tại cấu hình này, bộ giải đề xuất đạt độ chính xác tương đương nghiệm mịn nhất Mesh 9 với sai số NRMSE của tất cả các đại lượng đều $< 1.8\%$, đồng thời thời gian thực thi transient được tối ưu vượt trội, chỉ mất $0.3\text{ giờ}$ ($18\text{ phút}$) so với $2.3\text{ giờ}$ của 3D-FEM Mesh 6 (nhanh hơn $7.67\text{ lần}$) và $5.4\text{ giờ}$ của 3D-FEM Mesh 9 (nhanh hơn $18\text{ lần}$). Kết quả này chốt hạ khẳng định ưu thế vượt trội của phương pháp mạng từ trở 3D sinh lưới lục diện trong việc tiết kiệm tài nguyên tính toán và rút ngắn thời gian mô phỏng điện từ.

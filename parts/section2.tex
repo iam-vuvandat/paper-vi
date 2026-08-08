@@ -3,7 +3,7 @@
 
 \subsection{Các phương trình bảo toàn cục bộ}
 
-Nguyên lý cốt lõi để giải quyết bài toán phân bố trường trong mạng 3D-MRN là áp dụng định luật bảo toàn thông lượng từ tại từng nút thế trung tâm $P_{i,j,k}$. Theo bản chất không nguồn của từ trường, tổng đại số của tất cả các dòng thông lượng từ $\phi_{s,d,i,j,k}$ đi qua sáu nhánh nội tại kết nối với nút thế phải triệt tiêu nhằm đảm bảo tính bảo toàn năng lượng. Bằng cách sử dụng chỉ số trục $s \in \{r, \theta, z\}$ và chỉ số hướng $d \in \{0, 1\}$, phương trình cân bằng thông lượng tại nút được thiết lập như sau:
+Nguyên lý cốt lõi để giải quyết bài toán phân bố trường trong mô hình 3D-MBGRN là áp dụng định luật bảo toàn thông lượng từ tại từng nút thế trung tâm $P_{i,j,k}$. Theo bản chất không nguồn của từ trường, tổng đại số của tất cả các dòng thông lượng từ $\phi_{s,d,i,j,k}$ đi qua sáu nhánh nội tại kết nối với nút thế phải triệt tiêu nhằm đảm bảo tính bảo toàn năng lượng. Bằng cách sử dụng chỉ số trục $s \in \{r, \theta, z\}$ và chỉ số hướng $d \in \{0, 1\}$, phương trình cân bằng thông lượng tại nút được thiết lập như sau:
 \begin{equation}
     \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} (-1)^{d+1} \cdot \phi_{s,d,i,j,k} = 0
 \end{equation}
@@ -43,7 +43,7 @@ Bằng cách thay thế biểu thức thông lượng vào phương trình bảo
     & \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} (-1)^{d+1} \cdot J_{eq,s,d,i,j,k}
 \end{aligned}
 \end{equation}
-Sự kết hợp giữa các đại lượng tương đương này không chỉ làm rõ mối liên kết giữa các nút thế lân cận mà còn tạo cơ sở trực tiếp để định nghĩa các phần tử trong ma trận độ dẫn toàn cục và vector nguồn của bộ giải 3D-MRN.  
+Sự kết hợp giữa các đại lượng tương đương này không chỉ làm rõ mối liên kết giữa các nút thế lân cận mà còn tạo cơ sở trực tiếp để định nghĩa các phần tử trong ma trận độ dẫn toàn cục và vector nguồn của bộ giải 3D-MBGRN  
 
 \subsection{Matrix Assembly}
 
@@ -65,7 +65,7 @@ Dựa trên chỉ số phẳng $f$ đã được thiết lập, mỗi nút thế
 \begin{equation}
     J_I = \sum_{\substack{s \in \{r, \theta, z\} \\ d \in \{0, 1\}}} (-1)^{d+1} \cdot J_{eq,s,d,i,j,k}
 \end{equation}
-Trong đó, $J$ là chỉ số phẳng của các nút lân cận tương ứng với hướng $d$ và phương $s$. Việc duy trì cấu trúc lưới cố định và sử dụng chỉ số phẳng đồng nhất cho phép bộ giải `semiFEM` khai thác hiệu quả các định dạng lưu trữ nén như CSR, tối ưu hóa tốc độ hội tụ của thuật toán khi giải bài toán từ trường 3D phi tuyến.
+Trong đó, $J$ là chỉ số phẳng của các nút lân cận tương ứng với hướng $d$ và phương $s$. Việc duy trì cấu trúc lưới cố định và sử dụng chỉ số phẳng đồng nhất cho phép khai thác hiệu quả các định dạng lưu trữ nén như CSR, tối ưu hóa tốc độ hội tụ của thuật toán khi giải bài toán từ trường 3D phi tuyến.
 
 \begin{algorithm}[H]
 \caption{3D-MRN Matrix Assembly Procedure}
@@ -104,24 +104,36 @@ Cấu trúc thưa này cho phép hệ thống $q_E - 1$ phương trình được
 Hệ phương trình $\mathbf{G}(\mathbf{P}) \cdot \mathbf{P} = \mathbf{J}$ mang tính phi tuyến do ma trận độ dẫn toàn cục $\mathbf{G}$ được cấu thành từ các từ trở nhánh $R_{eq}$, vốn phụ thuộc trực tiếp vào độ từ thẩm $\mu_r$ – một đại lượng biến thiên phi tuyến theo mật độ từ thông $B$ của vật liệu sắt từ. Vì $B$ lại là hàm của vector thế nút $\mathbf{P}$, dẫn đến sự phụ thuộc lẫn nhau giữa cấu trúc ma trận và nghiệm của hệ. Để tìm nghiệm hội tụ, một quy trình lặp điểm cố định kết hợp với kỹ thuật thư giãn vật liệu (Material Relaxation) được thiết lập. Tại mỗi bước lặp, hệ số thư giãn $\alpha$ được điều chỉnh giảm dần theo hệ số suy giảm $b$ ($0 < b < 1$) để đảm bảo tính ổn định của nghiệm. Chi tiết quy trình được trình bày trong Thuật toán sau:
 
 \begin{algorithm}[H]
-\caption{Nonlinear Solver with Adaptive Relaxation}
+\caption{Advanced 3D-MBGRN Nonlinear Solver with Backtracking}
 \label{alg:nonlinear}
 \begin{algorithmic}[1]
-\STATE \textbf{Input:} $\mathbf{J}$, $\epsilon$, $\alpha_{init}$, $b$
-\STATE \textbf{Initial:} $\mu_r^{(0)} \leftarrow 1$, $\alpha \leftarrow \alpha_{init}$, $k \leftarrow 0$, $\mathbf{P}^{(0)} \leftarrow \mathbf{0}$
-\WHILE{not converged}
+\STATE \textbf{Input:} $\mathbf{J}$, $\epsilon$, $\alpha_{init}$, $b$, $\gamma$
+\STATE \textbf{Initial:} $\mu_r^{(0)} \leftarrow 1$, $\alpha \leftarrow \alpha_{init}$, $k \leftarrow 0$, $\mathbf{P}^{(0)} \leftarrow \mathbf{0}$, $\mathbf{P}_{best} \leftarrow \mathbf{0}$, $e_{best} \leftarrow \infty$
+\STATE Assemble $\mathbf{G}(\mathbf{P}^{(0)})$ and compute initial relative residual $e^{(0)}$
+\WHILE{$k < k_{max}$}
     \STATE $k \leftarrow k + 1$
-    \STATE Assemble $\mathbf{G}(\mu_r^{(k-1)})$
-    \STATE Solve $\mathbf{G} \cdot \mathbf{P}^{(k)} = \mathbf{J}$
+    \STATE Solve linear system for potential increment: $\Delta \mathbf{P} \leftarrow \mathbf{G}^{-1} (-\mathbf{R}^{(k-1)})$
+    \STATE Update candidate potential: $\mathbf{P}^{(k)} \leftarrow \mathbf{P}^{(k-1)} + \gamma \cdot \Delta \mathbf{P}$
     \STATE Calculate $B_{s,d,i,j,k}$ from $\mathbf{P}^{(k)}$ for each branch
     \STATE Look up $\mu_{r,calc}$ from $B-H$ curve
-    \STATE $\mu_r^{(k)} \leftarrow \mu_r^{(k-1)} + \alpha \cdot (\mu_{r,calc} - \mu_r^{(k-1)})$
-    \STATE $\alpha \leftarrow \alpha \cdot b$ \COMMENT{Cập nhật hệ số damping}
-    \STATE $e^{(k)} \leftarrow \|\mathbf{P}^{(k)} - \mathbf{P}^{(k-1)}\| / \|\mathbf{P}^{(k)}\|$
+    \STATE Update relaxation permeability: $\mu_r^{(k)} \leftarrow \mu_r^{(k-1)} + \alpha \cdot (\mu_{r,calc} - \mu_r^{(k-1)})$
+    \STATE Re-assemble $\mathbf{G}(\mu_r^{(k)})$ and calculate relative residual $e^{(k)}$
     \IF{$e^{(k)} < \epsilon$}
+        \STATE $\mathbf{P}_{best} \leftarrow \mathbf{P}^{(k)}$
         \STATE \textbf{break}
     \ENDIF
+    \IF{$e^{(k)} < e_{best}$}
+        \STATE $e_{best} \leftarrow e^{(k)}$
+        \STATE $\mathbf{P}_{best} \leftarrow \mathbf{P}^{(k)}$
+    \ELSE
+        \STATE $\alpha \leftarrow \alpha \cdot b$ \COMMENT{Adaptive material decay on backtracking}
+        \STATE Rollback potential: $\mathbf{P}^{(k)} \leftarrow \mathbf{P}_{best}$
+        \STATE Re-evaluate $\mathbf{G}$ at $\mathbf{P}_{best}$ with updated $\alpha$
+    \ENDIF
+    \IF{$e^{(k)} > 2.0 \cdot e_{best}$}
+        \STATE \textbf{break} \COMMENT{Severe divergence limit}
+    \ENDIF
 \ENDWHILE
-\STATE \textbf{Output:} $\mathbf{P}^{(k)}$, $\mathbf{B}^{(k)}$
+\STATE \textbf{Output:} $\mathbf{P}_{best}$, $\mathbf{B}$
 \end{algorithmic}
 \end{algorithm}
